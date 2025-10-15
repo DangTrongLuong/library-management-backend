@@ -11,6 +11,7 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Index;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
@@ -26,7 +27,12 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
 @Entity
-@Table(name = "Librarian")
+@Table(name = "Librarian",
+       indexes = {
+           @Index(name = "idx_librarian_phone", columnList = "phone"),  
+           @Index(name = "idx_librarian_email", columnList = "email"), 
+           @Index(name = "idx_librarian_shift", columnList = "shift") 
+       })
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
