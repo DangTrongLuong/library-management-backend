@@ -12,4 +12,6 @@ import com.library.library_management_system.entity.Librarian.Salary;
 @Repository
 public interface SalaryRepository extends JpaRepository<Salary, Integer> {
     Optional<Salary> findByLibrarianAndMonth(Librarian librarian, YearMonth month);
+    Optional<Salary> findTopByLibrarianOrderByMonthDesc(Librarian librarian);
+    void deleteByLibrarian(Librarian librarian);
 }
