@@ -1,4 +1,4 @@
-package com.library.library_management_system.repository;
+package com.library.library_management_system.repository.Librarian;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
