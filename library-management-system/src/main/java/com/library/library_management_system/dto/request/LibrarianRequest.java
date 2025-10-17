@@ -3,8 +3,6 @@ package com.library.library_management_system.dto.request;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-import com.library.library_management_system.enums.Shift;
-
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -37,7 +35,7 @@ public class LibrarianRequest {
     String email;
 
     @NotNull(message = "Shift is required")
-    Shift shiftId;
+    Integer shiftId;
 
     @NotNull(message = "Hourly wage is required")
     @DecimalMin(value = "0.0", message = "Hourly wage must be >= 0")
