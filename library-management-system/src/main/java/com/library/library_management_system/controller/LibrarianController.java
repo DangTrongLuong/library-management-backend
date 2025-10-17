@@ -1,9 +1,15 @@
 package com.library.library_management_system.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -23,6 +29,27 @@ public class LibrarianController {
     @PostMapping("/createLibrarian")
     public ResponseEntity<LibrarianResponse> createLibrarian(@Valid @RequestBody LibrarianRequest request) {
         return new ResponseEntity<>(librarianService.createLibrarian(request), HttpStatus.CREATED);
+    }
+    
+    @GetMapping
+    public ResponseEntity<List<LibrarianResponse>> getAllLibrarians() {
+        return new ResponseEntity<>(librarianService.getAllLibrarians(), HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<LibrarianResponse> getLibrarianById(@PathVariable String id) {
+        return new ResponseEntity<>(librarianService.getLibrarianById(id), HttpStatus.OK);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<LibrarianResponse> updateLibrarian(@PathVariable String id, @Valid @RequestBody LibrarianRequest request) {
+        return new ResponseEntity<>(librarianService.updateLibrarian(id, request), HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteLibrarian(@PathVariable String id) {
+        librarianService.deleteLibrarian(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
 }

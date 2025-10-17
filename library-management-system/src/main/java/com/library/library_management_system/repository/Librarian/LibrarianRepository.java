@@ -14,4 +14,6 @@ public interface LibrarianRepository extends JpaRepository<Librarian, String> {
 
     @Query("SELECT l FROM Librarian l WHERE (:keyword IS NULL OR LOWER(l.librarianName) LIKE LOWER(CONCAT('%', :keyword, '%')) OR l.phone LIKE CONCAT('%', :keyword, '%') OR LOWER(l.librarianId) LIKE LOWER(CONCAT('%', :keyword, '%')))")
     Page<Librarian> searchByNameOrPhoneOrId(@Param("keyword") String keyword, Pageable pageable);
+    boolean existsByPhone(String phone);
+    boolean existsByEmail(String email);
 }
