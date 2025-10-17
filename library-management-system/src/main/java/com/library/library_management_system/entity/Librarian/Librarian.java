@@ -2,7 +2,7 @@ package com.library.library_management_system.entity.Librarian;
 
 import java.time.LocalDate;
 
-import com.library.library_management_system.enums.Shift;
+import com.library.library_management_system.entity.Librarian.Shift;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
