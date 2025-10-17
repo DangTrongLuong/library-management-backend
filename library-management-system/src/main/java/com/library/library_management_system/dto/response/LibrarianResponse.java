@@ -17,7 +17,7 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class LibrarianResponse {
 
-    Integer librarianId;
+    String librarianId;
 
     String librarianName;
 

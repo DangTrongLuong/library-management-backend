@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import com.library.library_management_system.entity.Librarian;
+import com.library.library_management_system.entity.Librarian.Librarian;
 
 @Repository
 public interface LibrarianRepository extends JpaRepository<Librarian, String> {
