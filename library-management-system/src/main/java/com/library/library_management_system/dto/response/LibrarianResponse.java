@@ -2,8 +2,7 @@ package com.library.library_management_system.dto.response;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-
-import com.library.library_management_system.enums.Shift;
+import java.time.YearMonth;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -25,13 +24,19 @@ public class LibrarianResponse {
 
     String email;
 
-    Shift shift;
+    Integer shiftId;
+
+    String shiftName;
 
     String timeShift;
 
+    BigDecimal hoursPerDay;
+
     BigDecimal hourlyWage;
 
-    BigDecimal salary;
+    YearMonth salaryMonth;
+
+    BigDecimal totalSalary;
 
     String gender;
 

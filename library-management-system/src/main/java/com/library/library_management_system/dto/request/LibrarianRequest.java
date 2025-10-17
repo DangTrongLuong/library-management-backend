@@ -37,7 +37,7 @@ public class LibrarianRequest {
     String email;
 
     @NotNull(message = "Shift is required")
-    Shift shift;
+    Shift shiftId;
 
     @NotNull(message = "Hourly wage is required")
     @DecimalMin(value = "0.0", message = "Hourly wage must be >= 0")
