@@ -1,11 +1,12 @@
 package com.library.library_management_system.mapper;
 
-import com.library.library_management_system.dto.request.LibrarianRequest;
-import com.library.library_management_system.dto.response.LibrarianResponse;
-import com.library.library_management_system.entity.Librarian;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
+
+import com.library.library_management_system.dto.request.LibrarianRequest;
+import com.library.library_management_system.dto.response.LibrarianResponse;
+import com.library.library_management_system.entity.Librarian.Librarian;
 
 @Mapper(componentModel = "spring")
 public interface LibrarianMapper {
