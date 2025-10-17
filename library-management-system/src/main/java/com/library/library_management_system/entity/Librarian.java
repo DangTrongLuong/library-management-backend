@@ -9,8 +9,6 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Index;
 import jakarta.persistence.PrePersist;
@@ -42,8 +40,9 @@ import lombok.experimental.FieldDefaults;
 public class Librarian {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Integer librarianId;
+    @Size(max = 8, message = "Librarian ID must be at most 8 characters")
+    @Column(name = "librarian_id", nullable = false, unique = true, length = 8)
+    String librarianId;
 
     @NotBlank(message = "Name is required")
     @Size(max = 100)
