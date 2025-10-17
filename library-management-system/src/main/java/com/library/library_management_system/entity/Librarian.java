@@ -1,6 +1,7 @@
 package com.library.library_management_system.entity;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 
 import com.library.library_management_system.enums.Shift;
 
@@ -31,7 +32,8 @@ import lombok.experimental.FieldDefaults;
        indexes = {
            @Index(name = "idx_librarian_phone", columnList = "phone"),  
            @Index(name = "idx_librarian_email", columnList = "email"), 
-           @Index(name = "idx_librarian_shift", columnList = "shift") 
+           @Index(name = "idx_librarian_shift", columnList = "shift"),
+           @Index(name = "idx_librarian_status", columnList = "status")
        })
 @Data
 @NoArgsConstructor
@@ -66,25 +68,84 @@ public class Librarian {
     @Column(name = "time_shift", length = 100)
     String timeShift;
 
-    @DecimalMin(value = "0.0", message = "Salary must be >= 0")
+    @DecimalMin(value = "0.0", message = "Hourly wage must be >= 0")
+    @Column(name = "hourly_wage", precision = 10, scale = 2)
+    BigDecimal hourlyWage;
+
+    @DecimalMin(value = "0.0", message = "Monthly salary must be >= 0")
     @Column(name = "salary", precision = 10, scale = 2, columnDefinition = "DECIMAL(10,2) DEFAULT 0")
     BigDecimal salary = BigDecimal.ZERO;
 
-  
+    
+    @Column(name = "gender", length = 10)
+    String gender;  
+
+    @Column(name = "start_date")
+    LocalDate startDate;
+
+    @Column(name = "address", length = 255)
+    String address;
+
+    @Column(name = "status", length = 20, columnDefinition = "VARCHAR(20) DEFAULT 'ACTIVE'")
+    String status = "ACTIVE";  
+
+    @Column(name = "notes", columnDefinition = "TEXT")
+    String notes;
+
+    @Column(name = "created_at", nullable = false, updatable = false)
+    LocalDate createdAt;
+
+    @Column(name = "updated_at")
+    LocalDate updatedAt;
+
     
     @PrePersist
+    protected void onCreate() {
+        setTimeShiftAndCalculateSalary();
+        createdAt = LocalDate.now();
+        updatedAt = LocalDate.now();
+    }
+
     @PreUpdate
-    private void setTimeShift() {
-        if (this.shift != null) {
+    protected void onUpdate() {
+        setTimeShiftAndCalculateSalary();
+        updatedAt = LocalDate.now();
+    }
+
+
+    private void setTimeShiftAndCalculateSalary() {
+        if (this.shift != null && this.hourlyWage != null) {
+            BigDecimal hoursPerDay = BigDecimal.ZERO;
+            
             switch (this.shift) {
-                case Morning -> this.timeShift = "8h-12h";
-                case Afternoon -> this.timeShift = "13h-17h";
-                case Evenning -> this.timeShift = "19h-23h";
-                case Fulltime -> this.timeShift = "8h-17h";
+                case Morning -> {
+                    this.timeShift = "8h-12h";
+                    hoursPerDay = new BigDecimal("4"); 
+                }
+                case Afternoon -> {
+                    this.timeShift = "13h-17h";
+                    hoursPerDay = new BigDecimal("4"); 
+                }
+                case Evenning -> {
+                    this.timeShift = "19h-23h";
+                    hoursPerDay = new BigDecimal("4");  
+                }
+                case Fulltime -> {
+                    this.timeShift = "8h-17h";
+                    hoursPerDay = new BigDecimal("8");  
+                }
                 default -> this.timeShift = null;
             }
+            
+
+            BigDecimal workDaysPerMonth = new BigDecimal("26");
+            this.salary = this.hourlyWage
+                    .multiply(hoursPerDay)
+                    .multiply(workDaysPerMonth)
+                    .setScale(2, java.math.RoundingMode.HALF_UP);
         } else {
             this.timeShift = null;
+            this.salary = BigDecimal.ZERO;
         }
     }
 }
