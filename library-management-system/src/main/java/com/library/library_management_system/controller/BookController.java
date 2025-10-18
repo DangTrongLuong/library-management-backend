@@ -45,7 +45,10 @@ public class BookController {
         Books updatedBook = bookService.updateBook(id, book);
         return ResponseEntity.ok(updatedBook);
     }
-
-
-
+    // Xóa sách theo ID
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteBook(@PathVariable Integer id) {
+        bookService.deleteBook(id);
+        return ResponseEntity.noContent().build();
+    }
 }
