@@ -3,6 +3,7 @@ package com.library.library_management_system.entity.Librarian;
 import java.math.BigDecimal;
 import java.time.YearMonth;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -33,7 +34,7 @@ public class Salary {
     @Column(name = "salary_id")
     Integer salaryId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "librarian_id", nullable = false)
     Librarian librarian;
 
