@@ -31,5 +31,23 @@ public class BookService {
                 .orElseThrow(() -> new RuntimeException("Book not found with id: " + id));
     }
 
+    public Books updateBook(Integer id, Books updatedBook) {
+        return bookRepository.findById(id)
+                .map(book -> {
+                    book.setBookTitle(updatedBook.getBookTitle());
+                    book.setAuthor(updatedBook.getAuthor());
+                    book.setPublicationYear(updatedBook.getPublicationYear());
+                    book.setCategory(updatedBook.getCategory());
+                    book.setNxb(updatedBook.getNxb());
+                    book.setQuantity(updatedBook.getQuantity());
+                    book.setImageUrl(updatedBook.getImageUrl());
+                    return bookRepository.save(book);
+                })
+                .orElseThrow(() -> new RuntimeException("Book not found with id: " + id));
+    }
+
+
+
+
 
 }
