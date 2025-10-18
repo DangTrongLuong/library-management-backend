@@ -25,4 +25,10 @@ public class BookController {
     }
 
 
+    // Lấy danh sách tất cả sách
+    @GetMapping
+    public ResponseEntity<List<Books>> getAllBooks() {
+        List<Books> books = bookService.getAllBooks();
+        return ResponseEntity.ok(books);
+    }
 }
