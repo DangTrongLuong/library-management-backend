@@ -31,4 +31,11 @@ public class BookController {
         List<Books> books = bookService.getAllBooks();
         return ResponseEntity.ok(books);
     }
+
+    // Lấy chi tiết sách theo ID
+    @GetMapping("/{id}")
+    public ResponseEntity<Books> getBookById(@PathVariable Integer id) {
+        Books book = bookService.getBookById(id);
+        return ResponseEntity.ok(book);
+    }
 }
