@@ -45,9 +45,11 @@ public class BookService {
                 })
                 .orElseThrow(() -> new RuntimeException("Book not found with id: " + id));
     }
-
-
-
-
+    public void deleteBook(Integer id) {
+        if (!bookRepository.existsById(id)) {
+            throw new RuntimeException("Book not found with id: " + id);
+        }
+        bookRepository.deleteById(id);
+    }
 
 }
