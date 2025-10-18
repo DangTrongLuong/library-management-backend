@@ -17,34 +17,5 @@ public class BookService {
         return bookRepository.save(book);
     }
 
-    public Books updateBook(Integer id, Books updatedBook) {
-        return bookRepository.findById(id)
-                .map(book -> {
-                    book.setBookTitle(updatedBook.getBookTitle());
-                    book.setAuthor(updatedBook.getAuthor());
-                    book.setPublicationYear(updatedBook.getPublicationYear());
-                    book.setCategory(updatedBook.getCategory());
-                    book.setNxb(updatedBook.getNxb());
-                    book.setQuantity(updatedBook.getQuantity());
-                    book.setImageUrl(updatedBook.getImageUrl());
-                    return bookRepository.save(book);
-                })
-                .orElseThrow(() -> new RuntimeException("Book not found with id: " + id));
-    }
 
-    public List<Books> getAllBooks() {
-        return bookRepository.findAll();
-    }
-
-    public Books getBookById(Integer id) {
-        return bookRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Book not found with id: " + id));
-    }
-
-    public void deleteBook(Integer id) {
-        if (!bookRepository.existsById(id)) {
-            throw new RuntimeException("Book not found with id: " + id);
-        }
-        bookRepository.deleteById(id);
-    }
 }
