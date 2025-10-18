@@ -1,33 +1,26 @@
 package com.library.library_management_system.entity;
 
 import com.library.library_management_system.customValidation.FutureOrPresentYear;
-
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Index;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
-@Table(name = "Books",
-       indexes = {@Index(name = "idx_book_title", columnList = "book_title"),
-                  @Index(name = "idx_author", columnList = "author")})
+@Table(
+        name = "books",
+        indexes = {
+                @Index(name = "idx_book_title", columnList = "book_title"),
+                @Index(name = "idx_author", columnList = "author")
+        }
+)
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Books {
 
@@ -51,11 +44,12 @@ public class Books {
     Integer publicationYear;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnore
     @JoinColumn(name = "category_id", referencedColumnName = "categoryId")
     Category category;
 
     @Size(max = 100)
-    @Column(name = "NXB")
+    @Column(name = "nxb")
     String nxb;
 
     @Min(value = 0, message = "Quantity must be >= 0")
