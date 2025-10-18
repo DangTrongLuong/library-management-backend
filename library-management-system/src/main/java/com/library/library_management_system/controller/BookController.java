@@ -24,31 +24,5 @@ public class BookController {
         return ResponseEntity.status(HttpStatus.CREATED).body(newBook);
     }
 
-    // Sửa sách
-    @PutMapping("/{id}")
-    public ResponseEntity<Books> updateBook(@PathVariable Integer id, @RequestBody Books book) {
-        Books updatedBook = bookService.updateBook(id, book);
-        return ResponseEntity.ok(updatedBook);
-    }
 
-    // Lấy danh sách tất cả sách
-    @GetMapping
-    public ResponseEntity<List<Books>> getAllBooks() {
-        List<Books> books = bookService.getAllBooks();
-        return ResponseEntity.ok(books);
-    }
-
-    // Lấy chi tiết sách theo ID
-    @GetMapping("/{id}")
-    public ResponseEntity<Books> getBookById(@PathVariable Integer id) {
-        Books book = bookService.getBookById(id);
-        return ResponseEntity.ok(book);
-    }
-
-    // Xóa sách theo ID
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteBook(@PathVariable Integer id) {
-        bookService.deleteBook(id);
-        return ResponseEntity.noContent().build();
-    }
 }
