@@ -31,22 +31,22 @@ public class LibrarianController {
         return new ResponseEntity<>(librarianService.createLibrarian(request), HttpStatus.CREATED);
     }
     
-    @GetMapping
+    @GetMapping("/getAllLibrarian")
     public ResponseEntity<List<LibrarianResponse>> getAllLibrarians() {
         return new ResponseEntity<>(librarianService.getAllLibrarians(), HttpStatus.OK);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/getLibrarian/{id}")
     public ResponseEntity<LibrarianResponse> getLibrarianById(@PathVariable String id) {
         return new ResponseEntity<>(librarianService.getLibrarianById(id), HttpStatus.OK);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/updateLibrarian{id}")
     public ResponseEntity<LibrarianResponse> updateLibrarian(@PathVariable String id, @Valid @RequestBody LibrarianRequest request) {
         return new ResponseEntity<>(librarianService.updateLibrarian(id, request), HttpStatus.OK);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("deleteLibrarian/{id}")
     public ResponseEntity<Void> deleteLibrarian(@PathVariable String id) {
         librarianService.deleteLibrarian(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
