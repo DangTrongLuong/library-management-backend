@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.dao.DataIntegrityViolationException;
 
 import java.util.List;
 
@@ -45,11 +46,17 @@ public class BookService {
                 })
                 .orElseThrow(() -> new RuntimeException("Book not found with id: " + id));
     }
+
     public void deleteBook(Integer id) {
         if (!bookRepository.existsById(id)) {
             throw new RuntimeException("Book not found with id: " + id);
         }
-        bookRepository.deleteById(id);
+        try {
+            bookRepository.deleteById(id);
+        } catch (DataIntegrityViolationException e) {
+            throw new RuntimeException("Không thể xóa sách vì đang được sử dụng trong bảng khác!");
+        }
     }
+
 
 }
