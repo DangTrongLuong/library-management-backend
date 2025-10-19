@@ -57,6 +57,9 @@ public class BookService {
             throw new RuntimeException("Không thể xóa sách vì đang được sử dụng trong bảng khác!");
         }
     }
+    public List<Books> searchBooks(String title, String author, Integer categoryId) {
+        return bookRepository.searchBooks(title, author, categoryId);
+    }
 
 
 }

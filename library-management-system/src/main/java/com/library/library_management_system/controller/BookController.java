@@ -1,4 +1,4 @@
-package com.library.library_management_system.controller;
+ package com.library.library_management_system.controller;
 
 import com.library.library_management_system.entity.Books;
 import com.library.library_management_system.service.BookService;
@@ -54,5 +54,15 @@ public class BookController {
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<Books>> searchBooks(
+            @RequestParam(required = false) String title,
+            @RequestParam(required = false) String author,
+            @RequestParam(required = false) Integer categoryId) {
+
+        List<Books> result = bookService.searchBooks(title, author, categoryId);
+        return ResponseEntity.ok(result);
     }
 }
