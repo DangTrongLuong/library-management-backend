@@ -47,8 +47,12 @@ public class BookController {
     }
     // Xóa sách theo ID
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteBook(@PathVariable Integer id) {
-        bookService.deleteBook(id);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<?> deleteBook(@PathVariable Integer id) {
+        try {
+            bookService.deleteBook(id);
+            return ResponseEntity.noContent().build();
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 }
