@@ -51,5 +51,8 @@ public class BookService {
         }
         bookRepository.deleteById(id);
     }
+    public List<Books> searchBooks(String title, String author, Integer categoryId) {
+        return bookRepository.searchBooks(title, author, categoryId);
+    }
 
 }
