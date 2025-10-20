@@ -36,4 +36,13 @@ public class ReaderController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
         }
     }
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteReader(@PathVariable("id") Integer id) {
+        try {
+            readerService.deleteReader(id);
+            return ResponseEntity.noContent().build();
+        } catch (NoSuchElementException ex) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+        }
+    }
 }

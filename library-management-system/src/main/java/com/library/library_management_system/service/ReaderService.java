@@ -39,4 +39,10 @@ public class ReaderService {
         Reader saved = readerRepository.save(existing);
         return ReaderMapper.toResponse(saved);
     }
+    @Transactional
+    public void deleteReader(Integer id) {
+        Reader existing = readerRepository.findByReaderId(id)
+                .orElseThrow(() -> new NoSuchElementException("Reader not found with id: " + id));
+        readerRepository.delete(existing);
+    }
 }
