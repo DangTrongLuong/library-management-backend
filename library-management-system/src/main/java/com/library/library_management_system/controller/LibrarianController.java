@@ -41,7 +41,7 @@ public class LibrarianController {
         return new ResponseEntity<>(librarianService.getLibrarianById(id), HttpStatus.OK);
     }
 
-    @PutMapping("/updateLibrarian{id}")
+    @PutMapping("/updateLibrarian/{id}")
     public ResponseEntity<LibrarianResponse> updateLibrarian(@PathVariable String id, @Valid @RequestBody LibrarianRequest request) {
         return new ResponseEntity<>(librarianService.updateLibrarian(id, request), HttpStatus.OK);
     }
