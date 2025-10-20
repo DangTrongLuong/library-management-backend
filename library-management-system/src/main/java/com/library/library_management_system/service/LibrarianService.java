@@ -15,12 +15,12 @@ import com.library.library_management_system.dto.response.LibrarianResponse;
 import com.library.library_management_system.entity.Librarian.Librarian;
 import com.library.library_management_system.entity.Librarian.Salary;
 import com.library.library_management_system.entity.Librarian.Shift;
+import com.library.library_management_system.exception.DuplicateException;
+import com.library.library_management_system.exception.NotFoundException;
 import com.library.library_management_system.mapper.LibrarianMapper;
 import com.library.library_management_system.repository.Librarian.LibrarianRepository;
 import com.library.library_management_system.repository.Librarian.SalaryRepository;
 import com.library.library_management_system.repository.Librarian.ShiftRepository;
-
-import com.library.library_management_system.exception.*;
 
 
 @Service
@@ -93,47 +93,52 @@ public class LibrarianService {
     }
 
     @Transactional
-    public LibrarianResponse updateLibrarian(String id, LibrarianRequest request) {
-        Librarian existingLibrarian = librarianRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Thủ thư không tồn tại với id: " + id));
+public LibrarianResponse updateLibrarian(String id, LibrarianRequest request) {
+    Librarian existingLibrarian = librarianRepository.findById(id)
+            .orElseThrow(() -> new NotFoundException("Librarian not found with id: " + id));
 
-        // Kiểm tra trùng phone hoặc email
-        if (!existingLibrarian.getPhone().equals(request.getPhone()) && 
-            librarianRepository.existsByPhone(request.getPhone())) {
-            throw new DuplicateException("Số điện thoại đã tồn tại: " + request.getPhone());
-        }
-        if (!existingLibrarian.getEmail().equals(request.getEmail()) && 
-            librarianRepository.existsByEmail(request.getEmail())) {
-            throw new DuplicateException("Email đã tồn tại: " + request.getEmail());
-        }
-
-        Shift shift = shiftRepository.findById(request.getShiftId())
-                .orElseThrow(() -> new NotFoundException("Ca làm việc không tồn tại với id: " + request.getShiftId()));
-
-       
-        Salary latestSalary = salaryRepository.findTopByLibrarianOrderByMonthDesc(existingLibrarian)
-                .orElse(new Salary(null, existingLibrarian, BigDecimal.ZERO, YearMonth.now(), BigDecimal.ZERO));
-        boolean shiftChanged = !existingLibrarian.getShift().getShiftId().equals(request.getShiftId());
-        boolean wageChanged = !latestSalary.getHourlyWage().equals(request.getHourlyWage());
-
-        librarianMapper.updateEntityFromRequest(request, existingLibrarian);
-        existingLibrarian.setShift(shift);
-        Librarian updatedLibrarian = librarianRepository.save(existingLibrarian);
-
-       
-        if (shiftChanged || wageChanged) {
-            BigDecimal workDaysPerMonth = new BigDecimal("26");
-            BigDecimal totalSalary = request.getHourlyWage()
-                    .multiply(shift.getHoursPerDay())
-                    .multiply(workDaysPerMonth)
-                    .setScale(2, BigDecimal.ROUND_HALF_UP);
-            Salary salary = new Salary(null, updatedLibrarian, request.getHourlyWage(), YearMonth.now(), totalSalary);
-            salaryRepository.save(salary);
-            return librarianMapper.toResponse(updatedLibrarian, salary.getHourlyWage(), salary.getMonth(), salary.getTotalSalary());
-        } else {
-            return librarianMapper.toResponse(updatedLibrarian, latestSalary.getHourlyWage(), latestSalary.getMonth(), latestSalary.getTotalSalary());
-        }
+    // Check duplicate phone & email
+    if (!existingLibrarian.getPhone().equals(request.getPhone()) && 
+        librarianRepository.existsByPhone(request.getPhone())) {
+        throw new DuplicateException("Phone already exists: " + request.getPhone());
     }
+    if (!existingLibrarian.getEmail().equals(request.getEmail()) && 
+        librarianRepository.existsByEmail(request.getEmail())) {
+        throw new DuplicateException("Email already exists: " + request.getEmail());
+    }
+
+    Shift shift = shiftRepository.findById(request.getShiftId())
+            .orElseThrow(() -> new NotFoundException("Shift not found with id: " + request.getShiftId()));
+
+    Salary latestSalary = salaryRepository.findTopByLibrarianOrderByMonthDesc(existingLibrarian)
+            .orElse(new Salary(null, existingLibrarian, BigDecimal.ZERO, YearMonth.now(), BigDecimal.ZERO));
+    
+    boolean shiftChanged = !existingLibrarian.getShift().getShiftId().equals(request.getShiftId());
+    boolean wageChanged = !latestSalary.getHourlyWage().equals(request.getHourlyWage());
+
+    librarianMapper.updateEntityFromRequest(request, existingLibrarian);
+    existingLibrarian.setShift(shift);
+    Librarian updatedLibrarian = librarianRepository.save(existingLibrarian);
+
+    // Chỉ update salary nếu thay đổi wage hoặc shift, không thêm mới mỗi lần
+    if (shiftChanged || wageChanged) {
+        // Update bản cũ thay vì tạo mới
+        latestSalary.setHourlyWage(request.getHourlyWage());
+        latestSalary.setMonth(YearMonth.now());
+        
+        BigDecimal workDaysPerMonth = new BigDecimal("26");
+        BigDecimal totalSalary = request.getHourlyWage()
+                .multiply(shift.getHoursPerDay())
+                .multiply(workDaysPerMonth)
+                .setScale(2, BigDecimal.ROUND_HALF_UP);
+        latestSalary.setTotalSalary(totalSalary);
+        
+        salaryRepository.save(latestSalary);
+        return librarianMapper.toResponse(updatedLibrarian, latestSalary.getHourlyWage(), latestSalary.getMonth(), latestSalary.getTotalSalary());
+    } else {
+        return librarianMapper.toResponse(updatedLibrarian, latestSalary.getHourlyWage(), latestSalary.getMonth(), latestSalary.getTotalSalary());
+    }
+}
 
     @Transactional
     public void deleteLibrarian(String id) {
