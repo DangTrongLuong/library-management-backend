@@ -1,5 +1,6 @@
 package com.library.library_management_system.controller;
 
+import java.util.List;
 import java.util.NoSuchElementException;
 
 import org.springframework.http.HttpStatus;
@@ -22,6 +23,16 @@ public class ReaderController {
 
     public ReaderController(ReaderService readerService) {
         this.readerService = readerService;
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<ReaderResponse>> searchReaders(
+            @RequestParam(name = "name", required = false) String name,
+            @RequestParam(name = "numberPhone", required = false) String numberPhone,
+            @RequestParam(name = "email", required = false) String email) {
+
+        List<ReaderResponse> results = readerService.searchReaders(name, numberPhone, email);
+        return ResponseEntity.ok(results);
     }
 
     @PutMapping("/{id}")
