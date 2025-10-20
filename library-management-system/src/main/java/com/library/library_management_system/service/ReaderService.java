@@ -1,6 +1,8 @@
 package com.library.library_management_system.service;
 
+import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -44,5 +46,15 @@ public class ReaderService {
         Reader existing = readerRepository.findByReaderId(id)
                 .orElseThrow(() -> new NoSuchElementException("Reader not found with id: " + id));
         readerRepository.delete(existing);
+    }
+    @Transactional(readOnly = true)
+    public List<ReaderResponse> searchReaders(String name, String phone, String email) {
+        String n = (name == null || name.isBlank()) ? null : name.trim();
+        String p = (phone == null || phone.isBlank()) ? null : phone.trim();
+        String e = (email == null || email.isBlank()) ? null : email.trim();
+
+        return readerRepository.search(n, p, e).stream()
+                .map(ReaderMapper::toResponse)
+                .collect(Collectors.toList());
     }
 }
