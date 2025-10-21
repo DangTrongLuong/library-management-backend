@@ -26,8 +26,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 public class Books {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Integer bookId;
+    @Size(max = 10, message = "Book ID must be at most 10 characters")
+    @Column(name = "book_id", nullable = false, unique = true, length = 10)
+    String bookId;
 
     @NotBlank(message = "Book title is required")
     @Size(max = 255)
