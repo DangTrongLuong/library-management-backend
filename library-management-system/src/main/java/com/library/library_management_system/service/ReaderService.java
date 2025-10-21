@@ -1,42 +1,60 @@
 package com.library.library_management_system.service;
 
-import java.util.NoSuchElementException;
-
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.library.library_management_system.dto.request.ReaderRequest;
 import com.library.library_management_system.dto.response.ReaderResponse;
-import com.library.library_management_system.entity.Reader;
-import com.library.library_management_system.mapper.ReaderMapper;
-import com.library.library_management_system.repository.ReaderRepository;
+import org.springframework.data.domain.Page;
+import java.util.List;
 
-@Service
-public class ReaderService {
+/**
+ * ReaderService
+ * Định nghĩa các chức năng CRUD và tìm kiếm cho Reader.
+ */
+public interface ReaderService {
 
-    private final ReaderRepository readerRepository;
+    /**
+     * Tạo mới một Reader.
+     * @param request thông tin từ client.
+     * @return ReaderResponse sau khi lưu.
+     */
+    ReaderResponse createReader(ReaderRequest request);
 
-    public ReaderService(ReaderRepository readerRepository) {
-        this.readerRepository = readerRepository;
-    }
+    /**
+     * Lấy thông tin Reader theo ID.
+     * @param id Reader ID.
+     * @return ReaderResponse nếu tìm thấy.
+     */
+    ReaderResponse getReaderById(Integer id);
 
-    @Transactional
-    public ReaderResponse updateReader(Integer id, ReaderRequest request) {
-        Reader existing = readerRepository.findByReaderId(id)
-                .orElseThrow(() -> new NoSuchElementException("Reader not found with id: " + id));
+    /**
+     * Cập nhật thông tin Reader.
+     * @param id Reader ID cần cập nhật.
+     * @param request dữ liệu cập nhật.
+     * @return ReaderResponse sau khi cập nhật.
+     */
+    ReaderResponse updateReader(Integer id, ReaderRequest request);
 
-        if (request.getNumberPhone() != null &&
-            readerRepository.existsByNumberPhoneAndReaderIdNot(request.getNumberPhone(), id)) {
-            throw new IllegalArgumentException("Phone is already in use");
-        }
+    /**
+     * Xóa một Reader theo ID.
+     * @param id Reader ID cần xóa.
+     */
+    void deleteReader(Integer id);
 
-        if (request.getEmail() != null && !request.getEmail().isBlank() &&
-            readerRepository.existsByEmailAndReaderIdNot(request.getEmail(), id)) {
-            throw new IllegalArgumentException("Email is already in use");
-        }
+    /**
+     * Tìm kiếm Reader theo các tiêu chí: tên, số điện thoại, email.
+     * @param name tên cần tìm (tùy chọn)
+     * @param phone số điện thoại cần tìm (tùy chọn)
+     * @param email email cần tìm (tùy chọn)
+     * @return danh sách ReaderResponse phù hợp
+     */
+    List<ReaderResponse> searchReaders(String name, String phone, String email);
 
-        ReaderMapper.updateEntityFromRequest(existing, request);
-        Reader saved = readerRepository.save(existing);
-        return ReaderMapper.toResponse(saved);
-    }
+    /**
+     * Lấy danh sách Reader có phân trang và sắp xếp.
+     * @param page trang hiện tại (bắt đầu từ 0)
+     * @param size số lượng phần tử mỗi trang
+     * @param sortBy trường dùng để sắp xếp
+     * @param sortDir hướng sắp xếp (ASC/DESC)
+     * @return Page chứa ReaderResponse
+     */
+    Page<ReaderResponse> getAllReaders(int page, int size, String sortBy, String sortDir);
 }

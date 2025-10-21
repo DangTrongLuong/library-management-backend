@@ -1,5 +1,6 @@
 package com.library.library_management_system.controller;
 
+import java.util.List;
 import java.util.NoSuchElementException;
 
 import org.springframework.http.HttpStatus;
@@ -24,6 +25,16 @@ public class ReaderController {
         this.readerService = readerService;
     }
 
+    @GetMapping("/search")
+    public ResponseEntity<List<ReaderResponse>> searchReaders(
+            @RequestParam(name = "name", required = false) String name,
+            @RequestParam(name = "numberPhone", required = false) String numberPhone,
+            @RequestParam(name = "email", required = false) String email) {
+
+        List<ReaderResponse> results = readerService.searchReaders(name, numberPhone, email);
+        return ResponseEntity.ok(results);
+    }
+
     @PutMapping("/{id}")
     public ResponseEntity<?> updateReader(@PathVariable("id") Integer id,
                                           @Valid @RequestBody ReaderRequest request) {
@@ -34,6 +45,16 @@ public class ReaderController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
         } catch (IllegalArgumentException ex) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+        }
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteReader(@PathVariable("id") Integer id) {
+        try {
+            readerService.deleteReader(id);
+            return ResponseEntity.noContent().build();
+        } catch (NoSuchElementException ex) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
         }
     }
 }
