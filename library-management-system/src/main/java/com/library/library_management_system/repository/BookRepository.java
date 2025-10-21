@@ -1,18 +1,22 @@
 package com.library.library_management_system.repository;
 
-import com.library.library_management_system.entity.Books;
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 
-import java.util.List;
+import com.library.library_management_system.entity.Books;
 
-public interface BookRepository extends JpaRepository<Books, Integer> {
-    @Query("SELECT b FROM Books b " +
-            "WHERE (:title IS NULL OR LOWER(b.bookTitle) LIKE LOWER(CONCAT('%', :title, '%'))) " +
-            "AND (:author IS NULL OR LOWER(b.author) LIKE LOWER(CONCAT('%', :author, '%'))) " +
-            "AND (:categoryId IS NULL OR b.category.categoryId = :categoryId)")
-    List<Books> searchBooks(@Param("title") String title,
-                            @Param("author") String author,
-                            @Param("categoryId") Integer categoryId);
+@Repository
+public interface BookRepository extends JpaRepository<Books, String> {
+
+    @Query("SELECT b FROM Books b WHERE " +
+            "LOWER(b.bookTitle) LIKE LOWER(CONCAT('%', :keyword, '%')) OR " +
+            "LOWER(b.author) LIKE LOWER(CONCAT('%', :keyword, '%')) OR " +
+            "LOWER(b.category.typeName) LIKE LOWER(CONCAT('%', :keyword, '%'))")
+    List<Books> searchBooks(@Param("keyword") String keyword);
+
+    boolean existsByBookTitle(String bookTitle);
 }

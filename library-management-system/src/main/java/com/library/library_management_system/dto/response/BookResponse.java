@@ -1,21 +1,32 @@
 package com.library.library_management_system.dto.response;
 
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
-@Builder
+@AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class BookResponse {
-    Integer bookId;
-    String bookTitle;
-    String author;
-    Integer publicationYear;
-    String nxb;
-    Integer quantity;
-    String categoryName; // Lấy từ Category.typeName
-    String imageUrl;
 
+    String bookId;
+
+    String bookTitle;
+
+    String author;
+
+    Integer publicationYear;
+
+    Integer categoryId;
+
+    String categoryName;
+
+    String nxb;
+
+    Integer quantity;
+
+    String imageUrl;
 }
