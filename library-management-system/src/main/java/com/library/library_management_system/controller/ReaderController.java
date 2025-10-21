@@ -47,6 +47,7 @@ public class ReaderController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
         }
     }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteReader(@PathVariable("id") Integer id) {
         try {

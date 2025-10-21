@@ -2,30 +2,60 @@ package com.library.library_management_system.dto.request;
 
 import java.time.LocalDate;
 
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
-import lombok.Data;
-
-@Data
 public class ReaderRequest {
-    @NotBlank(message = "Name is required")
-    @Size(max = 100)
-    String name;
+    private String name;
+    private String numberPhone;
+    private String email;
+    private String address;
+    private LocalDate registrationDate;
+    private String cardType; // client gửi "Bronze", "Silver" hoặc "VIP"
 
-    @NotBlank(message = "Phone is required")
-    @Pattern(regexp = "^0[0-9]{9,10}$", message = "Invalid phone format")
-    @Size(max = 15)
-    String numberPhone;
+    // Getters và Setters
+    public String getName() {
+        return name;
+    }
 
-    @Email(message = "Invalid email format")
-    @Size(max = 100)
-    String email;
+    public void setName(String name) {
+        this.name = name;
+    }
 
-    @Size(max = 255)
-    String address;
+    public String getNumberPhone() {
+        return numberPhone;
+    }
 
-    // optional: client may set registrationDate; if null entity's @PrePersist keeps existing behavior
-    LocalDate registrationDate;
+    public void setNumberPhone(String numberPhone) {
+        this.numberPhone = numberPhone;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public LocalDate getRegistrationDate() {
+        return registrationDate;
+    }
+
+    public void setRegistrationDate(LocalDate registrationDate) {
+        this.registrationDate = registrationDate;
+    }
+
+    public String getCardType() {
+        return cardType;
+    }
+
+    public void setCardType(String cardType) {
+        this.cardType = cardType;
+    }
 }
