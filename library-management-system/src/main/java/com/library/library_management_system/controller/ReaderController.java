@@ -25,6 +25,14 @@ public class ReaderController {
         this.readerService = readerService;
     }
 
+    // ✅ Create Reader
+    @PostMapping
+    public ResponseEntity<?> createReader(@Valid @RequestBody ReaderRequest request) {
+        ReaderResponse response = readerService.createReader(request);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+    // ✅ Search Readers
     @GetMapping("/search")
     public ResponseEntity<List<ReaderResponse>> searchReaders(
             @RequestParam(name = "name", required = false) String name,
@@ -35,6 +43,7 @@ public class ReaderController {
         return ResponseEntity.ok(results);
     }
 
+    // ✅ Update Reader
     @PutMapping("/{id}")
     public ResponseEntity<?> updateReader(@PathVariable("id") Integer id,
                                           @Valid @RequestBody ReaderRequest request) {
@@ -48,6 +57,7 @@ public class ReaderController {
         }
     }
 
+    // ✅ Delete Reader
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteReader(@PathVariable("id") Integer id) {
         try {
