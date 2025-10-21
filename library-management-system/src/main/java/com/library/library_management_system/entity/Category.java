@@ -1,24 +1,20 @@
 package com.library.library_management_system.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Index;
-import jakarta.persistence.Table;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
+
+import java.util.List;
 
 @Entity
 @Table(name = "Category",
-       indexes = {@Index(name = "idx_type_name", columnList = "type_name"),
-                  @Index(name = "idx_shelf_position", columnList = "shelf_position")})
+        indexes = {
+                @Index(name = "idx_type_name", columnList = "type_name"),
+                @Index(name = "idx_shelf_position", columnList = "shelf_position")
+        })
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -44,4 +40,17 @@ public class Category {
 
     @Column(columnDefinition = "TEXT")
     String note;
+
+    @OneToMany(mappedBy = "category")
+    @JsonBackReference
+    private List<Books> books;
+
+    // ✅ Constructor 5 tham số (không có List<Books>)
+    public Category(Integer categoryId, String typeName, String description, String shelfPosition, String note) {
+        this.categoryId = categoryId;
+        this.typeName = typeName;
+        this.description = description;
+        this.shelfPosition = shelfPosition;
+        this.note = note;
+    }
 }

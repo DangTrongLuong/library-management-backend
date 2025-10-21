@@ -1,5 +1,6 @@
 package com.library.library_management_system.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.library.library_management_system.customValidation.FutureOrPresentYear;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
@@ -44,9 +45,8 @@ public class Books {
     Integer publicationYear;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JsonIgnore
     @JoinColumn(name = "category_id", referencedColumnName = "categoryId")
-    Category category;
+    private Category category;
 
     @Size(max = 100)
     @Column(name = "nxb")
