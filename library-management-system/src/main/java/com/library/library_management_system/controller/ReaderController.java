@@ -48,9 +48,9 @@ public class ReaderController {
             ReaderResponse resp = readerService.updateReader(id, request);
             return ResponseEntity.ok(resp);
         } catch (NoSuchElementException ex) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Reader not found: " + ex.getMessage());
         } catch (IllegalArgumentException ex) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid data: " + ex.getMessage());
         }
     }
 
@@ -60,7 +60,7 @@ public class ReaderController {
             readerService.deleteReader(id);
             return ResponseEntity.noContent().build();
         } catch (NoSuchElementException ex) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Reader not found: " + ex.getMessage());
         }
     }
 }
