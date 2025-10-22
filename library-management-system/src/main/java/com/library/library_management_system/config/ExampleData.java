@@ -18,15 +18,28 @@ public class ExampleData {
     CommandLineRunner initDatabase(CategoryRepository categoryRepository) {
         return args -> {
             if (categoryRepository.count() == 0) {
-                categoryRepository.save(new Category(null, "Khoa học viễn tưởng", "Thể loại về khoa học và tương lai", "A1", "Dữ liệu mẫu"));
-                categoryRepository.save(new Category(null, "Lãng mạn", "Chuyện tình yêu", "B1", "Dữ liệu mẫu"));
-                categoryRepository.save(new Category(null, "Kinh dị", "Truyện ma, rùng rợn", "C1", "Dữ liệu mẫu"));
-                categoryRepository.save(new Category(null, "Phiêu lưu", "Các câu chuyện khám phá, mạo hiểm", "D1", "Dữ liệu mẫu"));
-                categoryRepository.save(new Category(null, "Tâm lý", "Truyện phân tích tâm lý con người", "E1", "Dữ liệu mẫu"));
-                categoryRepository.save(new Category(null, "Manga", "Truyện tranh Nhật Bản", "A3", "Truyên tranh Nhật Bản"));
-                categoryRepository.save(new Category(null, "Light Novel", "Tiêu thuyết Nhật Bản", "E10", "Dành cho thanh thiếu niên 20 đổ lên"));
-                categoryRepository.save(new Category(null, "Yandere", "Độc chiếm tình cảm ", "D4", "Dữ liệu thêm"));
-
+                categoryRepository.save(new Category(null, "Science Fiction", "Stories about science and the future", "A1", "Sample data"));
+                categoryRepository.save(new Category(null, "Romance", "Love stories and relationships", "A2", "Sample data"));
+                categoryRepository.save(new Category(null, "Horror", "Ghost stories and creepy tales", "A3", "Sample data"));
+                categoryRepository.save(new Category(null, "Adventure", "Exploration and adventure stories", "A4", "Sample data"));
+                categoryRepository.save(new Category(null, "Psychology", "Stories analyzing human psychology", "A5", "Sample data"));
+                categoryRepository.save(new Category(null, "Manga", "Japanese comic books", "B1", "Sample data"));
+                categoryRepository.save(new Category(null, "Light Novel", "Japanese light novels", "B2", "Sample data"));
+                categoryRepository.save(new Category(null, "Poetry", "Poetry from Vietnam and the world", "B3", "Sample data"));
+                categoryRepository.save(new Category(null, "Science and Technology", "Modern science and technology", "B4", "Sample data"));
+                categoryRepository.save(new Category(null, "Drama", "Plays and dramatic literature", "B5", "Sample data"));
+                categoryRepository.save(new Category(null, "Programming", "Books about programming and coding", "C1", "Sample data"));
+                categoryRepository.save(new Category(null, "Textbooks", "Educational textbooks for various subjects", "C2", "Sample data"));
+                categoryRepository.save(new Category(null, "Humor", "Funny stories and comedy", "C3", "Sample data"));
+                categoryRepository.save(new Category(null, "Philosophy of Life", "Books about life philosophy and wisdom", "C4", "Sample data"));
+                categoryRepository.save(new Category(null, "History", "Historical events and biographies", "C5", "Sample data"));
+                categoryRepository.save(new Category(null, "Philosophy", "Philosophical theories and thinkers", "D1", "Sample data"));
+                categoryRepository.save(new Category(null, "Detective", "Mystery and detective stories", "D2", "Sample data"));
+                categoryRepository.save(new Category(null, "Religion", "Books about religions and beliefs", "D3", "Sample data"));
+                categoryRepository.save(new Category(null, "Cooking", "Cookbooks and culinary guides", "D4", "Sample data"));
+                categoryRepository.save(new Category(null, "Fables", "Traditional fables and moral stories", "D5", "Sample data"));
+                categoryRepository.save(new Category(null, "Anatomy Biology", "Books about human anatomy and biology", "E1", "Sample data"));
+                categoryRepository.save(new Category(null, "Business Management", "Books about business administration and management", "E2", "Sample data"));
                 System.out.println("Dữ liệu mẫu thể loại đã được thêm vào cơ sở dữ liệu.");
             }
         };
