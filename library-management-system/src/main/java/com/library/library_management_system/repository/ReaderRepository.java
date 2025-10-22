@@ -17,12 +17,12 @@ public interface ReaderRepository extends JpaRepository<Reader, Integer> {
     Optional<Reader> findByReaderId(Integer readerId);
 
     @Query("SELECT r FROM Reader r WHERE "
-         + "(:name IS NULL OR LOWER(r.name) LIKE LOWER(CONCAT('%', :name, '%'))) AND "
-         + "(:phone IS NULL OR LOWER(r.numberPhone) LIKE LOWER(CONCAT('%', :phone, '%'))) AND "
-         + "(:email IS NULL OR LOWER(r.email) LIKE LOWER(CONCAT('%', :email, '%')))")
+            + "(:name IS NULL OR LOWER(r.name) LIKE LOWER(CONCAT('%', :name, '%'))) AND "
+            + "(:phone IS NULL OR LOWER(r.numberPhone) LIKE LOWER(CONCAT('%', :phone, '%'))) AND "
+            + "(:email IS NULL OR LOWER(r.email) LIKE LOWER(CONCAT('%', :email, '%')))")
     List<Reader> search(
-        @Param("name") String name,
-        @Param("phone") String phone,
-        @Param("email") String email
+            @Param("name") String name,
+            @Param("phone") String phone,
+            @Param("email") String email
     );
 }

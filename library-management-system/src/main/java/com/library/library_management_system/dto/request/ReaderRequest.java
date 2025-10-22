@@ -1,5 +1,6 @@
 package com.library.library_management_system.dto.request;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import java.time.LocalDate;
 
 public class ReaderRequest {
@@ -7,7 +8,10 @@ public class ReaderRequest {
     private String numberPhone;
     private String email;
     private String address;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy/MM/dd")
     private LocalDate registrationDate;
+
     private String cardType; // client gửi "Bronze", "Silver" hoặc "VIP"
 
     // Getters và Setters

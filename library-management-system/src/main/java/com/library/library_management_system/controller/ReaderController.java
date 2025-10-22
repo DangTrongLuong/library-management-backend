@@ -25,6 +25,12 @@ public class ReaderController {
         this.readerService = readerService;
     }
 
+    @PostMapping
+    public ResponseEntity<ReaderResponse> createReader(@Valid @RequestBody ReaderRequest request) {
+        ReaderResponse response = readerService.createReader(request);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
     @GetMapping("/search")
     public ResponseEntity<List<ReaderResponse>> searchReaders(
             @RequestParam(name = "name", required = false) String name,
