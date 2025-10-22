@@ -2,59 +2,111 @@ package com.library.library_management_system.service;
 
 import com.library.library_management_system.dto.request.ReaderRequest;
 import com.library.library_management_system.dto.response.ReaderResponse;
-import org.springframework.data.domain.Page;
+import com.library.library_management_system.entity.Reader;
+import com.library.library_management_system.exception.DuplicateException;
+import com.library.library_management_system.exception.NotFoundException;
+import com.library.library_management_system.mapper.ReaderMapper;
+import com.library.library_management_system.repository.ReaderRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Random;
+import java.util.stream.Collectors;
 
-/**
- * ReaderService
- * Định nghĩa các chức năng CRUD và tìm kiếm cho Reader.
- */
-public interface ReaderService {
+@Service
+public class ReaderService {
 
-    /**
-     * Tạo mới một Reader.
-     * @param request thông tin từ client.
-     * @return ReaderResponse sau khi lưu.
-     */
-    ReaderResponse createReader(ReaderRequest request);
+    @Autowired
+    private ReaderRepository readerRepository;
 
-    /**
-     * Lấy thông tin Reader theo ID.
-     * @param id Reader ID.
-     * @return ReaderResponse nếu tìm thấy.
-     */
-    ReaderResponse getReaderById(Integer id);
+    @Autowired
+    private ReaderMapper readerMapper;
 
-    /**
-     * Cập nhật thông tin Reader.
-     * @param id Reader ID cần cập nhật.
-     * @param request dữ liệu cập nhật.
-     * @return ReaderResponse sau khi cập nhật.
-     */
-    ReaderResponse updateReader(Integer id, ReaderRequest request);
+    @Transactional
+    public ReaderResponse createReader(ReaderRequest request) {
+        // Check duplicate phone and email
+        if (readerRepository.existsByNumberPhone(request.getNumberPhone())) {
+            throw new DuplicateException("Phone number already exists: " + request.getNumberPhone());
+        }
+        if (readerRepository.existsByEmail(request.getEmail())) {
+            throw new DuplicateException("Email already exists: " + request.getEmail());
+        }
 
-    /**
-     * Xóa một Reader theo ID.
-     * @param id Reader ID cần xóa.
-     */
-    void deleteReader(Integer id);
+        // Create reader entity
+        Reader reader = readerMapper.toEntity(request);
 
-    /**
-     * Tìm kiếm Reader theo các tiêu chí: tên, số điện thoại, email.
-     * @param name tên cần tìm (tùy chọn)
-     * @param phone số điện thoại cần tìm (tùy chọn)
-     * @param email email cần tìm (tùy chọn)
-     * @return danh sách ReaderResponse phù hợp
-     */
-    List<ReaderResponse> searchReaders(String name, String phone, String email);
+        // Generate reader ID: R + 7 random digits
+        String readerId;
+        Random random = new Random();
+        do {
+            int randomNum = random.nextInt(10000000); // 0 to 9999999
+            readerId = "R" + String.format("%07d", randomNum);
+        } while (readerRepository.existsById(readerId));
 
-    /**
-     * Lấy danh sách Reader có phân trang và sắp xếp.
-     * @param page trang hiện tại (bắt đầu từ 0)
-     * @param size số lượng phần tử mỗi trang
-     * @param sortBy trường dùng để sắp xếp
-     * @param sortDir hướng sắp xếp (ASC/DESC)
-     * @return Page chứa ReaderResponse
-     */
-    Page<ReaderResponse> getAllReaders(int page, int size, String sortBy, String sortDir);
+        reader.setReaderId(readerId);
+
+        // Set registration date if not provided
+        if (reader.getRegistrationDate() == null) {
+            reader.setRegistrationDate(LocalDate.now());
+        }
+
+        Reader savedReader = readerRepository.save(reader);
+        return readerMapper.toResponse(savedReader);
+    }
+
+    @Transactional(readOnly = true)
+    public List<ReaderResponse> getAllReaders() {
+        return readerRepository.findAll().stream()
+                .map(readerMapper::toResponse)
+                .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public ReaderResponse getReaderById(String id) {
+        Reader reader = readerRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Reader not found with id: " + id));
+        return readerMapper.toResponse(reader);
+    }
+
+    @Transactional
+    public ReaderResponse updateReader(String id, ReaderRequest request) {
+        Reader existingReader = readerRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Reader not found with id: " + id));
+
+        // Check duplicate phone and email (except current reader)
+        if (!existingReader.getNumberPhone().equals(request.getNumberPhone()) &&
+                readerRepository.existsByNumberPhone(request.getNumberPhone())) {
+            throw new DuplicateException("Phone number already exists: " + request.getNumberPhone());
+        }
+        if (!existingReader.getEmail().equals(request.getEmail()) &&
+                readerRepository.existsByEmail(request.getEmail())) {
+            throw new DuplicateException("Email already exists: " + request.getEmail());
+        }
+
+        // Update reader info
+        readerMapper.updateEntityFromRequest(request, existingReader);
+
+        Reader updatedReader = readerRepository.save(existingReader);
+        return readerMapper.toResponse(updatedReader);
+    }
+
+    @Transactional
+    public void deleteReader(String id) {
+        Reader reader = readerRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Reader not found with id: " + id));
+        readerRepository.delete(reader);
+    }
+
+    @Transactional(readOnly = true)
+    public List<ReaderResponse> searchReaders(String keyword) {
+        if (keyword == null || keyword.trim().isEmpty()) {
+            return getAllReaders();
+        }
+        return readerRepository.searchReaders(keyword).stream()
+                .map(readerMapper::toResponse)
+                .collect(Collectors.toList());
+    }
 }

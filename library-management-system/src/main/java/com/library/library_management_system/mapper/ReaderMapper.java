@@ -3,61 +3,42 @@ package com.library.library_management_system.mapper;
 import com.library.library_management_system.dto.request.ReaderRequest;
 import com.library.library_management_system.dto.response.ReaderResponse;
 import com.library.library_management_system.entity.Reader;
-import com.library.library_management_system.enums.CardType;
+import org.springframework.stereotype.Component;
 
+@Component
 public class ReaderMapper {
 
-    // 1. Entity → Response
-    public static ReaderResponse toResponse(Reader r) {
-        if (r == null) return null;
-        ReaderResponse resp = new ReaderResponse();
-        resp.setReaderId(r.getReaderId());
-        resp.setName(r.getName());
-        resp.setNumberPhone(r.getNumberPhone());
-        resp.setEmail(r.getEmail());
-        resp.setAddress(r.getAddress());
-        resp.setRegistrationDate(r.getRegistrationDate());
-        resp.setCardType(r.getCardType() != null ? r.getCardType().name() : null);
-        return resp;
-    }
-
-    // 2. Request → Entity (tạo mới)
-    public static Reader toEntity(ReaderRequest req) {
-        if (req == null) return null;
+    public Reader toEntity(ReaderRequest request) {
         Reader reader = new Reader();
-        reader.setName(req.getName());
-        reader.setNumberPhone(req.getNumberPhone());
-        reader.setEmail(req.getEmail());
-        reader.setAddress(req.getAddress());
-        reader.setRegistrationDate(req.getRegistrationDate());
-
-        if (req.getCardType() != null) {
-            try {
-                reader.setCardType(CardType.fromString(req.getCardType()));
-            } catch (IllegalArgumentException e) {
-                throw new RuntimeException("Invalid card type: " + req.getCardType());
-            }
-        }
+        reader.setName(request.getName());
+        reader.setNumberPhone(request.getNumberPhone());
+        reader.setEmail(request.getEmail());
+        reader.setAddress(request.getAddress());
+        reader.setRegistrationDate(request.getRegistrationDate());
+        reader.setCardType(request.getCardType());
         return reader;
     }
 
-    // 3. Cập nhật Entity từ Request (update)
-    public static void updateEntityFromRequest(Reader reader, ReaderRequest req) {
-        if (reader == null || req == null) return;
-        reader.setName(req.getName());
-        reader.setNumberPhone(req.getNumberPhone());
-        reader.setEmail(req.getEmail());
-        reader.setAddress(req.getAddress());
-        if (req.getRegistrationDate() != null) {
-            reader.setRegistrationDate(req.getRegistrationDate());
-        }
+    public ReaderResponse toResponse(Reader reader) {
+        ReaderResponse response = new ReaderResponse();
+        response.setReaderId(reader.getReaderId());
+        response.setName(reader.getName());
+        response.setNumberPhone(reader.getNumberPhone());
+        response.setEmail(reader.getEmail());
+        response.setAddress(reader.getAddress());
+        response.setRegistrationDate(reader.getRegistrationDate());
+        response.setCardType(reader.getCardType());
+        response.setCreatedAt(reader.getCreatedAt());
+        response.setUpdatedAt(reader.getUpdatedAt());
+        return response;
+    }
 
-        if (req.getCardType() != null) {
-            try {
-                reader.setCardType(CardType.fromString(req.getCardType()));
-            } catch (IllegalArgumentException e) {
-                throw new RuntimeException("Invalid card type: " + req.getCardType());
-            }
-        }
+    public void updateEntityFromRequest(ReaderRequest request, Reader reader) {
+        reader.setName(request.getName());
+        reader.setNumberPhone(request.getNumberPhone());
+        reader.setEmail(request.getEmail());
+        reader.setAddress(request.getAddress());
+        reader.setRegistrationDate(request.getRegistrationDate());
+        reader.setCardType(request.getCardType());
     }
 }
