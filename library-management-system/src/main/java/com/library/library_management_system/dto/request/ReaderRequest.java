@@ -8,9 +8,9 @@ public class ReaderRequest {
     private String numberPhone;
     private String email;
     private String address;
-    @JsonFormat(pattern = "dd/MM/yyyy") // 👈 đặt ngay trên biến
+    @JsonFormat(pattern = "dd/MM/yyyy") //
     private LocalDate registrationDate;
-    private String cardType;
+    private String CardType;
 
 
 
@@ -56,10 +56,10 @@ public class ReaderRequest {
     }
 
     public String getCardType() {
-        return cardType;
+        return CardType;
     }
 
     public void setCardType(String cardType) {
-        this.cardType = cardType;
+        this.CardType = cardType;
     }
 }

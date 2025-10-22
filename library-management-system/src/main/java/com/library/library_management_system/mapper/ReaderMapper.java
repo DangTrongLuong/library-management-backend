@@ -33,11 +33,12 @@ public class ReaderMapper {
 
         if (req.getCardType() != null) {
             try {
-                reader.setCardType(CardType.valueOf(req.getCardType()));
+                reader.setCardType(CardType.valueOf(req.getCardType().toUpperCase())); // 👈 xử lý an toàn
             } catch (IllegalArgumentException e) {
-                throw new RuntimeException("Invalid card type: " + req.getCardType());
+                throw new IllegalArgumentException("Invalid card type: " + req.getCardType());
             }
         }
+
         return reader;
     }
 
@@ -48,15 +49,16 @@ public class ReaderMapper {
         reader.setNumberPhone(req.getNumberPhone());
         reader.setEmail(req.getEmail());
         reader.setAddress(req.getAddress());
+
         if (req.getRegistrationDate() != null) {
             reader.setRegistrationDate(req.getRegistrationDate());
         }
 
         if (req.getCardType() != null) {
             try {
-                reader.setCardType(CardType.valueOf(req.getCardType()));
+                reader.setCardType(CardType.valueOf(req.getCardType().toUpperCase()));
             } catch (IllegalArgumentException e) {
-                throw new RuntimeException("Invalid card type: " + req.getCardType());
+                throw new IllegalArgumentException("Invalid card type: " + req.getCardType());
             }
         }
     }
