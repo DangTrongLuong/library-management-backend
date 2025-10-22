@@ -1,13 +1,24 @@
 package com.library.library_management_system.entity;
 
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import jakarta.persistence.*;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Index;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
-
-import java.util.List;
 
 @Entity
 @Table(name = "Category",
@@ -45,7 +56,7 @@ public class Category {
     @JsonBackReference
     private List<Books> books;
 
-    // ✅ Constructor 5 tham số (không có List<Books>)
+    
     public Category(Integer categoryId, String typeName, String description, String shelfPosition, String note) {
         this.categoryId = categoryId;
         this.typeName = typeName;
