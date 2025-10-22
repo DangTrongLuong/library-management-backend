@@ -17,7 +17,7 @@ public class ReaderMapper {
         resp.setEmail(r.getEmail());
         resp.setAddress(r.getAddress());
         resp.setRegistrationDate(r.getRegistrationDate());
-        resp.setCardType(r.getCardType() != null ? r.getCardType().name() : null); // Enum → String
+        resp.setCardType(r.getCardType() != null ? r.getCardType().name() : null);
         return resp;
     }
 
@@ -33,7 +33,7 @@ public class ReaderMapper {
 
         if (req.getCardType() != null) {
             try {
-                reader.setCardType(CardType.valueOf(req.getCardType()));
+                reader.setCardType(CardType.fromString(req.getCardType()));
             } catch (IllegalArgumentException e) {
                 throw new RuntimeException("Invalid card type: " + req.getCardType());
             }
@@ -54,7 +54,7 @@ public class ReaderMapper {
 
         if (req.getCardType() != null) {
             try {
-                reader.setCardType(CardType.valueOf(req.getCardType()));
+                reader.setCardType(CardType.fromString(req.getCardType()));
             } catch (IllegalArgumentException e) {
                 throw new RuntimeException("Invalid card type: " + req.getCardType());
             }
