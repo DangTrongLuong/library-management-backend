@@ -1,70 +1,35 @@
 package com.library.library_management_system.dto.response;
 
+import com.library.library_management_system.enums.CardType;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.experimental.FieldDefaults;
+
 import java.time.LocalDate;
 
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class ReaderResponse {
-    private Long readerId;
-    private String name;
-    private String numberPhone;
-    private String email;
-    private String address;
-    private LocalDate registrationDate;
-    private String cardType; // trả về dạng chuỗi (Bronze, Silver, VIP)
 
-    // Getters và Setters
-    public Long getReaderId() {
-        return readerId;
-    }
+    String readerId;
 
-    public void setReaderId(Long readerId) {
-        this.readerId = readerId;
-    }
+    String name;
 
-    public String getName() {
-        return name;
-    }
+    String numberPhone;
 
-    public void setName(String name) {
-        this.name = name;
-    }
+    String email;
 
-    public String getNumberPhone() {
-        return numberPhone;
-    }
+    String address;
 
-    public void setNumberPhone(String numberPhone) {
-        this.numberPhone = numberPhone;
-    }
+    LocalDate registrationDate;
 
-    public String getEmail() {
-        return email;
-    }
+    CardType cardType;
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
+    LocalDate createdAt;
 
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public LocalDate getRegistrationDate() {
-        return registrationDate;
-    }
-
-    public void setRegistrationDate(LocalDate registrationDate) {
-        this.registrationDate = registrationDate;
-    }
-
-    public String getCardType() {
-        return cardType;
-    }
-
-    public void setCardType(String cardType) {
-        this.cardType = cardType;
-    }
+    LocalDate updatedAt;
 }
