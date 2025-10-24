@@ -1,8 +1,13 @@
 package com.library.library_management_system.service;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
+
+import com.library.library_management_system.entity.Reader;
+import com.library.library_management_system.exception.NotFoundException;
+import org.springframework.transaction.annotation.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -77,6 +82,7 @@ public class BorrowService {
         borrow.setBorrowId(borrowId); // Set generated ID
         borrow.setStatus(BorrowStatus.BORROWED); // Default status
 
+
         Borrow savedBorrow = borrowRepository.save(borrow);
         return borrowMapper.toResponse(savedBorrow);
     }
@@ -114,7 +120,8 @@ public class BorrowService {
                 );
             }
 
-            // Update book reference
+
+                // Update book reference
             existingBorrow.setBook(newBook);
         }
 
@@ -128,6 +135,10 @@ public class BorrowService {
         borrowMapper.updateEntityFromRequest(request, existingBorrow);
 
         Borrow updatedBorrow = borrowRepository.save(existingBorrow);
+        if (request.getStatus() == BorrowStatus.RETURNED && existingBorrow.getReturnDate() == null) {
+            existingBorrow.setReturnDate(LocalDate.now());
+
+        }
         return borrowMapper.toResponse(updatedBorrow);
     }
 
