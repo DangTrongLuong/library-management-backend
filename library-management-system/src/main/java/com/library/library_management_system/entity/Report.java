@@ -19,7 +19,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.apache.catalina.User;
-
 @Entity
 @Table(name = "reports")
 @Data
