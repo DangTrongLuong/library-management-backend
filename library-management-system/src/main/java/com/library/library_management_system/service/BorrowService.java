@@ -81,6 +81,7 @@ public class BorrowService {
         borrow.setBorrowId(borrowId); // Set generated ID
         borrow.setStatus(BorrowStatus.BORROWED); // Default status
 
+
         Borrow savedBorrow = borrowRepository.save(borrow);
         return borrowMapper.toResponse(savedBorrow);
     }
@@ -118,7 +119,8 @@ public class BorrowService {
                 );
             }
 
-            // Update book reference
+
+                // Update book reference
             existingBorrow.setBook(newBook);
         }
 
@@ -132,6 +134,10 @@ public class BorrowService {
         borrowMapper.updateEntityFromRequest(request, existingBorrow);
 
         Borrow updatedBorrow = borrowRepository.save(existingBorrow);
+        if (request.getStatus() == BorrowStatus.RETURNED && existingBorrow.getReturnDate() == null) {
+            existingBorrow.setReturnDate(LocalDate.now());
+
+        }
         return borrowMapper.toResponse(updatedBorrow);
     }
 
