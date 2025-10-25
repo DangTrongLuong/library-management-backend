@@ -29,7 +29,7 @@ public class CategoryController {
         return ResponseEntity.ok(categoryService.getCategoryById(id));
     }
 
-    @PostMapping
+    @PostMapping("/createCategory")
     public ResponseEntity<CategoryResponse> createCategory(@Valid @RequestBody CategoryRequest request) {
         return ResponseEntity.ok(categoryService.createCategory(request));
     }
