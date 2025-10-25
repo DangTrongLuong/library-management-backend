@@ -28,4 +28,18 @@ public class ReportService {
     public ReportResponse getReportById(String id) {
         return repository.findById(id).map(ReportMapper::toResponse).orElse(null);
     }
+    public List<ReportResponse> searchReports(String type, String creatorId) {
+        // Only filter by report type and creator id
+        return repository.findAll().stream().filter(r -> {
+            if (type != null && !type.isBlank()) {
+                if (r.getReportType() == null || !r.getReportType().toLowerCase().contains(type.toLowerCase())) return false;
+            }
+            if (creatorId != null && !creatorId.isBlank()) {
+                String cId = ReportMapper.extractCreatorId(r);
+                if (cId == null || !cId.equals(creatorId)) return false;
+            }
+            return true;
+        }).map(ReportMapper::toResponse).collect(Collectors.toList());
+    }
 }
+

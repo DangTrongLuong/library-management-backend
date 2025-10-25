@@ -36,4 +36,16 @@ public class ReportController {
         }
         return new ResponseEntity<>(resp, HttpStatus.OK);
     }
+    // Hàm tìm kiếm báo cáo theo loại và người tạo
+    @GetMapping("/searchReport")
+    public ResponseEntity<List<ReportResponse>> searchReports(
+            @RequestParam(value = "type", required = false) String type,
+            @RequestParam(value = "creatorId", required = false) String creatorId
+    ) {
+        List<ReportResponse> results = reportService.searchReports(type, creatorId);
+        if (results == null || results.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(results, HttpStatus.OK);
+    }
 }
