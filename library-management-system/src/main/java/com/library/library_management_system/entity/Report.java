@@ -1,6 +1,8 @@
 package com.library.library_management_system.entity;
 
 import java.time.LocalDate;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -18,7 +20,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.apache.catalina.User;
+
 @Entity
 @Table(name = "reports")
 @Data
@@ -57,8 +59,15 @@ public class Report {
     @Column(name = "updated_at")
     LocalDate updatedAt;
 
+    // Validate creator is admin before persisting
     @PrePersist
     protected void onCreate() {
+        if (creator == null) {
+            throw new IllegalStateException("Creator is required");
+        }
+        if (!isAdminCreator()) {
+            throw new SecurityException("Only admin users can create reports");
+        }
         createdAt = LocalDate.now();
         updatedAt = LocalDate.now();
     }
@@ -66,5 +75,27 @@ public class Report {
     @PreUpdate
     protected void onUpdate() {
         updatedAt = LocalDate.now();
+    }
+
+    // Helper: try to detect an admin role using reflection (supports getRole() or a 'role' field)
+    private boolean isAdminCreator() {
+        try {
+            Method m = creator.getClass().getMethod("getRole");
+            Object role = m.invoke(creator);
+            if (role == null) return false;
+            return "ADMIN".equalsIgnoreCase(role.toString());
+        } catch (NoSuchMethodException e) {
+            try {
+                Field f = creator.getClass().getDeclaredField("role");
+                f.setAccessible(true);
+                Object role = f.get(creator);
+                if (role == null) return false;
+                return "ADMIN".equalsIgnoreCase(role.toString());
+            } catch (Exception ex) {
+                return false;
+            }
+        } catch (Exception e) {
+            return false;
+        }
     }
 }
