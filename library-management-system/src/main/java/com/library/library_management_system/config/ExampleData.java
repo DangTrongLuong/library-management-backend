@@ -2,17 +2,17 @@ package com.library.library_management_system.config;
 
 import java.math.BigDecimal;
 
-import com.library.library_management_system.entity.Books;
-import com.library.library_management_system.repository.BookRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 
+import com.library.library_management_system.entity.Books;
 import com.library.library_management_system.entity.Category;
 import com.library.library_management_system.entity.Librarian.Shift;
+import com.library.library_management_system.repository.BookRepository;
 import com.library.library_management_system.repository.CategoryRepository;
 import com.library.library_management_system.repository.Librarian.ShiftRepository;
-import org.springframework.core.annotation.Order;
 
 
 @Configuration
@@ -86,7 +86,7 @@ public class ExampleData {
                     2024,
                     "NXB Trẻ",
                     65,
-                    "/uploads/books/img_1.png",
+                    "uploads/books/img_1.png",
                     5,categoryRepository
             ));
 
@@ -97,14 +97,14 @@ public class ExampleData {
                     2020,
                     "NXB Kim Đồng",
                     97,
-                    "/uploads/books/img_2.png",
+                    "uploads/books/img_2.png",
                     4,categoryRepository
             ));
-            bookRepository.save(createSampleBook("B004", "Don Quixote", "Miguel de Cervantes", 1605, "Francisco de Robles", 34, "/uploads/books/img_3.png", 4,categoryRepository));
-            bookRepository.save(createSampleBook("B005", "Đại Việt Sử Ký Toàn Thư", "Ngô Sĩ Liên", 1697, "Quốc Sử Quán", 540, "/uploads/books/img_4.png",15, categoryRepository));
-            bookRepository.save(createSampleBook("B006", "Wadanohara and the great blue sea", "Cute And Horror",2014 , "Cute and horror team", 500, "/uploads/books/img_5.jpg",10, categoryRepository));
-            bookRepository.save(createSampleBook("B007", "Bạn nai Nokotan", "Unknow",2020 , "Unknow", 500, "/uploads/books/img_5.png",6, categoryRepository));
-            bookRepository.save(createSampleBook("B008", "Triết học Mac- Lenin", "Triet hoc the gioi",2010 , "Nha xuat ban su that", 350, "/uploads/books/img_6.png",16, categoryRepository));
+            bookRepository.save(createSampleBook("B004", "Don Quixote", "Miguel de Cervantes", 1605, "Francisco de Robles", 34, "uploads/books/img_3.png", 4,categoryRepository));
+            bookRepository.save(createSampleBook("B005", "Đại Việt Sử Ký Toàn Thư", "Ngô Sĩ Liên", 1697, "Quốc Sử Quán", 540, "uploads/books/img_4.png",15, categoryRepository));
+            bookRepository.save(createSampleBook("B006", "Wadanohara and the great blue sea", "Cute And Horror",2014 , "Cute and horror team", 500, "uploads/books/img_5.jpg",10, categoryRepository));
+            bookRepository.save(createSampleBook("B007", "Bạn nai Nokotan", "Unknow",2020 , "Unknow", 500, "uploads/books/img_5.png",6, categoryRepository));
+            bookRepository.save(createSampleBook("B008", "Triết học Mac- Lenin", "Triet hoc the gioi",2010 , "Nha xuat ban su that", 350, "uploads/books/img_6.png",16, categoryRepository));
 
 
             System.out.println("✅ Dữ liệu mẫu sách đã được thêm vào cơ sở dữ liệu.");
