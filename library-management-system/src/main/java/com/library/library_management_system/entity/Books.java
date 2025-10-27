@@ -3,12 +3,13 @@ package com.library.library_management_system.entity;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.library.library_management_system.customValidation.FutureOrPresentYear;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(
@@ -60,4 +61,26 @@ public class Books {
     @Size(max = 255, message = "Image URL too long")
     @Column(name = "image_url")
     String imageUrl;
+
+    @NotNull(message = "Price is required")
+    @Positive(message = "Price must be positive")
+    @Column(name = "price", nullable = false)
+    BigDecimal price;
+
+    @Column(name = "created_at", nullable = false, updatable = false)
+    LocalDateTime createdAt;
+
+    @Column(name = "updated_at")
+    LocalDateTime updatedAt;
+
+    @PrePersist
+    protected void onCreate() {
+        createdAt = LocalDateTime.now();
+        updatedAt = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        updatedAt = LocalDateTime.now();
+    }
 }

@@ -1,15 +1,14 @@
 package com.library.library_management_system.dto.request;
 
 import com.library.library_management_system.customValidation.FutureOrPresentYear;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
+
+import java.math.BigDecimal;
 
 @Data
 @NoArgsConstructor
@@ -39,4 +38,8 @@ public class BookRequest {
     @NotNull(message = "Quantity is required")
     @Min(value = 0, message = "Quantity must be >= 0")
     Integer quantity;
+
+    @NotNull(message = "Price is required")
+    @Positive(message = "Price must be positive")
+    BigDecimal price;
 }
