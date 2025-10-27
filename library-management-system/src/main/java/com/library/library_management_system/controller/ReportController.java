@@ -49,4 +49,10 @@ public class ReportController {
     }
 
 
+    // Cập nhật báo cáo
+    @PutMapping("/{id}")
+    public ResponseEntity<ReportResponse> updateReport(@PathVariable Long id, @RequestBody ReportRequest request) {
+        ReportResponse report = reportService.updateReport(id, request);
+        return ResponseEntity.ok(report);
+    }
 }
