@@ -2,6 +2,7 @@ package com.library.library_management_system.controller;
 
 import com.library.library_management_system.dto.request.ReaderRequest;
 import com.library.library_management_system.dto.response.ReaderResponse;
+import com.library.library_management_system.dto.response.ReportResponse;
 import com.library.library_management_system.service.ReaderService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,11 +22,6 @@ public class ReaderController {
     @PostMapping("/createReader")
     public ResponseEntity<ReaderResponse> createReader(@Valid @RequestBody ReaderRequest request) {
         return new ResponseEntity<>(readerService.createReader(request), HttpStatus.CREATED);
-    }
-
-    @GetMapping("/getAllReaders")
-    public ResponseEntity<List<ReaderResponse>> getAllReaders() {
-        return new ResponseEntity<>(readerService.getAllReaders(), HttpStatus.OK);
     }
 
     @GetMapping("/getReader/{id}")
