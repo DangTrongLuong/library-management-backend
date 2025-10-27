@@ -63,69 +63,69 @@ public class ExampleData {
             }
         };
     }
-    @Bean
-    @Order(3)
-    CommandLineRunner initBookData(BookRepository bookRepository, CategoryRepository categoryRepository) {
-        return args -> {
-            if (bookRepository.count() == 0) {
-            bookRepository.save(createSampleBook(
-                    "B001",
-                    "Fate/Stay Night",
-                    "Kinoko Nasu",
-                    2004,
-                    "Type-Moon",
-                    100,
-                    "/uploads/books/img.png",
-                    7,categoryRepository
-            ));
-
-            bookRepository.save(createSampleBook(
-                    "B002",
-                    "Không tồn tại giữa anh và em",
-                    "Nguyễn Nhật Ánh",
-                    2024,
-                    "NXB Trẻ",
-                    65,
-                    "uploads/books/img_1.png",
-                    5,categoryRepository
-            ));
-
-            bookRepository.save(createSampleBook(
-                    "B003",
-                    "Dế Mèn Phiêu Lưu Ký",
-                    "Tô Hoài",
-                    2020,
-                    "NXB Kim Đồng",
-                    97,
-                    "uploads/books/img_2.png",
-                    4,categoryRepository
-            ));
-            bookRepository.save(createSampleBook("B004", "Don Quixote", "Miguel de Cervantes", 1605, "Francisco de Robles", 34, "uploads/books/img_3.png", 4,categoryRepository));
-            bookRepository.save(createSampleBook("B005", "Đại Việt Sử Ký Toàn Thư", "Ngô Sĩ Liên", 1697, "Quốc Sử Quán", 540, "uploads/books/img_4.png",15, categoryRepository));
-            bookRepository.save(createSampleBook("B006", "Wadanohara and the great blue sea", "Cute And Horror",2014 , "Cute and horror team", 500, "uploads/books/img_5.jpg",10, categoryRepository));
-            bookRepository.save(createSampleBook("B007", "Bạn nai Nokotan", "Unknow",2020 , "Unknow", 500, "uploads/books/img_5.png",6, categoryRepository));
-            bookRepository.save(createSampleBook("B008", "Triết học Mac- Lenin", "Triet hoc the gioi",2010 , "Nha xuat ban su that", 350, "uploads/books/img_6.png",16, categoryRepository));
-
-
-            System.out.println("✅ Dữ liệu mẫu sách đã được thêm vào cơ sở dữ liệu.");
-    }
-    };
-    }
-    private Books createSampleBook(String id, String title, String author, int year, String publisher, int quantity, String imageUrl, int categoryId, CategoryRepository categoryRepository) {
-        Books book = new Books();
-        book.setBookId(id);
-        book.setBookTitle(title);
-        book.setAuthor(author);
-        book.setPublicationYear(year);
-        book.setNxb(publisher);
-        book.setQuantity(quantity);
-        book.setImageUrl(imageUrl);
-
-        // Lấy Category từ DB
-        Category category = categoryRepository.getReferenceById(categoryId);
-        book.setCategory(category);
-
-        return book;
-    }
+//    @Bean
+//    @Order(3)
+//    CommandLineRunner initBookData(BookRepository bookRepository, CategoryRepository categoryRepository) {
+//        return args -> {
+//            if (bookRepository.count() == 0) {
+//            bookRepository.save(createSampleBook(
+//                    "B001",
+//                    "Fate/Stay Night",
+//                    "Kinoko Nasu",
+//                    2004,
+//                    "Type-Moon",
+//                    100,
+//                    "/uploads/books/img.png",
+//                    7,categoryRepository
+//            ));
+//
+//            bookRepository.save(createSampleBook(
+//                    "B002",
+//                    "Không tồn tại giữa anh và em",
+//                    "Nguyễn Nhật Ánh",
+//                    2024,
+//                    "NXB Trẻ",
+//                    65,
+//                    "uploads/books/img_1.png",
+//                    5,categoryRepository
+//            ));
+//
+//            bookRepository.save(createSampleBook(
+//                    "B003",
+//                    "Dế Mèn Phiêu Lưu Ký",
+//                    "Tô Hoài",
+//                    2020,
+//                    "NXB Kim Đồng",
+//                    97,
+//                    "uploads/books/img_2.png",
+//                    4,categoryRepository
+//            ));
+//            bookRepository.save(createSampleBook("B004", "Don Quixote", "Miguel de Cervantes", 1605, "Francisco de Robles", 34, "uploads/books/img_3.png", 4,categoryRepository));
+//            bookRepository.save(createSampleBook("B005", "Đại Việt Sử Ký Toàn Thư", "Ngô Sĩ Liên", 1697, "Quốc Sử Quán", 540, "uploads/books/img_4.png",15, categoryRepository));
+//            bookRepository.save(createSampleBook("B006", "Wadanohara and the great blue sea", "Cute And Horror",2014 , "Cute and horror team", 500, "uploads/books/img_5.jpg",10, categoryRepository));
+//            bookRepository.save(createSampleBook("B007", "Bạn nai Nokotan", "Unknow",2020 , "Unknow", 500, "uploads/books/img_5.png",6, categoryRepository));
+//            bookRepository.save(createSampleBook("B008", "Triết học Mac- Lenin", "Triet hoc the gioi",2010 , "Nha xuat ban su that", 350, "uploads/books/img_6.png",16, categoryRepository));
+//
+//
+//            System.out.println("✅ Dữ liệu mẫu sách đã được thêm vào cơ sở dữ liệu.");
+//    }
+//    };
+//    }
+//    private Books createSampleBook(String id, String title, String author, int year, String publisher, int quantity, String imageUrl, int categoryId, CategoryRepository categoryRepository) {
+//        Books book = new Books();
+//        book.setBookId(id);
+//        book.setBookTitle(title);
+//        book.setAuthor(author);
+//        book.setPublicationYear(year);
+//        book.setNxb(publisher);
+//        book.setQuantity(quantity);
+//        book.setImageUrl(imageUrl);
+//
+//        // Lấy Category từ DB
+//        Category category = categoryRepository.getReferenceById(categoryId);
+//        book.setCategory(category);
+//
+//        return book;
+//    }
 
 }

@@ -16,6 +16,7 @@ public class BookMapper {
         book.setPublicationYear(request.getPublicationYear());
         book.setNxb(request.getNxb());
         book.setQuantity(request.getQuantity());
+        book.setPrice(request.getPrice());
         return book;
     }
 
@@ -34,6 +35,7 @@ public class BookMapper {
         response.setNxb(book.getNxb());
         response.setQuantity(book.getQuantity());
         response.setImageUrl(book.getImageUrl());
+        response.setPrice(book.getPrice());
 
         return response;
     }
@@ -44,5 +46,6 @@ public class BookMapper {
         book.setPublicationYear(request.getPublicationYear());
         book.setNxb(request.getNxb());
         book.setQuantity(request.getQuantity());
+        book.setPrice(request.getPrice());
     }
 }
