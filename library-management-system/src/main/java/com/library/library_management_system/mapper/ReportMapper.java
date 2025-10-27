@@ -1,65 +1,55 @@
 package com.library.library_management_system.mapper;
 
+import com.library.library_management_system.dto.request.ReportRequest;
 import com.library.library_management_system.dto.response.ReportResponse;
 import com.library.library_management_system.entity.Report;
+import com.library.library_management_system.entity.User;
+import org.springframework.stereotype.Component;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
+import java.time.LocalDateTime;
 
+@Component
 public class ReportMapper {
-    public static ReportResponse toResponse(Report r) {
-        if (r == null) return null;
+
+    // Convert Entity -> Response DTO
+    public ReportResponse toResponse(Report report) {
+        if (report == null) return null;
+
         ReportResponse resp = new ReportResponse();
-        resp.setReportId(r.getReportId());
-        resp.setReportType(r.getReportType());
-        resp.setStartDate(r.getStartDate());
-        resp.setEndDate(r.getEndDate());
-        resp.setContent(r.getContent());
-        // use extractor which now falls back to "admin"
-        String creatorId = extractCreatorId(r);
-        resp.setCreatorId(creatorId);
-        resp.setCreatedAt(r.getCreatedAt());
-        resp.setUpdatedAt(r.getUpdatedAt());
+        resp.setReportId(report.getReportId()); // Long
+        resp.setReportType(report.getReportType());
+        resp.setStartDate(report.getStartDate());
+        resp.setEndDate(report.getEndDate());
+        resp.setContent(report.getContent());
+
+        // Đảm bảo creatorId là Long
+        if (report.getCreator() != null && report.getCreator().getId() != null) {
+            resp.setCreatorId(report.getCreator().getId());
+        } else {
+            resp.setCreatorId(null);
+        }
+
         return resp;
     }
-    // safe extraction of creator id with reflection (tries common method/field names)
-    // Default to "admin" when creator is missing or id cannot be resolved
-    public static String extractCreatorId(Report r) {
-        if (r == null) return "admin";
-        Object creator = r.getCreator();
-        if (creator == null) return "admin"; // default creator
 
-        try {
-            Method m = creator.getClass().getMethod("getId");
-            Object id = m.invoke(creator);
-            if (id != null) return id.toString();
-        } catch (Exception e) {
-            // try some common alternatives
-        }
-        try {
-            Method m = creator.getClass().getMethod("getUserId");
-            Object id = m.invoke(creator);
-            if (id != null) return id.toString();
-        } catch (Exception e) {
-            // fallback to fields
-        }
-        try {
-            Field f = creator.getClass().getDeclaredField("id");
-            f.setAccessible(true);
-            Object id = f.get(creator);
-            if (id != null) return id.toString();
-        } catch (Exception e) {
-            // last attempt
-        }
-        try {
-            Field f = creator.getClass().getDeclaredField("userId");
-            f.setAccessible(true);
-            Object id = f.get(creator);
-            if (id != null) return id.toString();
-        } catch (Exception e) {
-            // unable to extract id
-        }
-        // fallback default when no id found
-        return "admin";
+    // Convert Request DTO -> Entity
+    public Report toEntity(ReportRequest request, User creator) {
+        if (request == null) return null;
+
+        Report report = new Report();
+        report.setReportId(request.getReportId()); // Long
+        report.setReportType(request.getReportType());
+        report.setStartDate(request.getStartDate());
+        report.setEndDate(request.getEndDate());
+        report.setContent(request.getContent());
+        report.setCreator(creator); // User entity
+        report.setCreatedAt(LocalDateTime.now());
+
+        return report;
+    }
+
+    // Extract creatorId safely
+    public Long extractCreatorId(Report report) {
+        return (report != null && report.getCreator() != null) ? report.getCreator().getId() : null;
     }
 }

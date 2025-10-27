@@ -1,4 +1,5 @@
 package com.library.library_management_system.repository;
+
 import java.time.LocalDate;
 import java.util.List;
 
@@ -7,10 +8,15 @@ import org.springframework.stereotype.Repository;
 
 import com.library.library_management_system.entity.Report;
 
+
 @Repository
-public interface ReportRepository extends JpaRepository<Report, String> {
-    // helper query methods (optional / may be unused by service)
+public interface ReportRepository extends JpaRepository<Report, Long> {
+
     List<Report> findByReportTypeContainingIgnoreCase(String type);
-    List<Report> findByCreator_Id(long  creatorId);
+
+    List<Report> findByCreator_Id(Long creatorId); // Đổi từ String sang Long
+
     List<Report> findByStartDateBetween(LocalDate start, LocalDate end);
+
+    boolean existsById(Long reportId);
 }
