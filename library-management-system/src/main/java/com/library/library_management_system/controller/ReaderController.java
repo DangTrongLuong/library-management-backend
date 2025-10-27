@@ -1,16 +1,25 @@
 package com.library.library_management_system.controller;
 
-import com.library.library_management_system.dto.request.ReaderRequest;
-import com.library.library_management_system.dto.response.ReaderResponse;
-import com.library.library_management_system.dto.response.ReportResponse;
-import com.library.library_management_system.service.ReaderService;
-import jakarta.validation.Valid;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
+import com.library.library_management_system.dto.request.ReaderRequest;
+import com.library.library_management_system.dto.response.ReaderResponse;
+import com.library.library_management_system.service.ReaderService;
+
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/readers")
@@ -23,6 +32,12 @@ public class ReaderController {
     public ResponseEntity<ReaderResponse> createReader(@Valid @RequestBody ReaderRequest request) {
         return new ResponseEntity<>(readerService.createReader(request), HttpStatus.CREATED);
     }
+
+    @GetMapping("/getAllReaders")
+    public ResponseEntity<List<ReaderResponse>> getAllBooks() {
+        return new ResponseEntity<>(readerService.getAllReaders(), HttpStatus.OK);
+    }
+    
 
     @GetMapping("/getReader/{id}")
     public ResponseEntity<ReaderResponse> getReaderById(@PathVariable String id) {

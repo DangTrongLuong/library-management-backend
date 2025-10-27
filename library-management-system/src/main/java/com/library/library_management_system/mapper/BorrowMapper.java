@@ -15,6 +15,7 @@ public class BorrowMapper {
         borrow.setDueDate(request.getDueDate());
         borrow.setReturnDate(request.getReturnDate());
         borrow.setStatus(request.getStatus());
+        borrow.setBorrowPrice(request.getBorrowPrice());
         borrow.setNotes(request.getNotes());
         return borrow;
     }
@@ -46,6 +47,7 @@ public class BorrowMapper {
         response.setDueDate(borrow.getDueDate());
         response.setReturnDate(borrow.getReturnDate());
         response.setStatus(borrow.getStatus());
+        response.setBorrowPrice(borrow.getBorrowPrice());
         response.setNotes(borrow.getNotes());
         response.setCreatedAt(borrow.getCreatedAt());
         response.setUpdatedAt(borrow.getUpdatedAt());
@@ -58,6 +60,7 @@ public class BorrowMapper {
         borrow.setDueDate(request.getDueDate());
         borrow.setReturnDate(request.getReturnDate());
         borrow.setStatus(request.getStatus());
+        borrow.setBorrowPrice(request.getBorrowPrice());
         borrow.setNotes(request.getNotes());
     }
 

@@ -1,5 +1,6 @@
 package com.library.library_management_system.entity;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 import com.library.library_management_system.enums.BorrowStatus;
@@ -67,6 +68,10 @@ public class Borrow {
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
     BorrowStatus status;
+
+    @Column(name= "borrow_price", nullable=false)
+    @NotNull(message = "Borrow price is required")
+    BigDecimal borrowPrice;
 
     @Column(name = "notes", columnDefinition = "TEXT")
     String notes;

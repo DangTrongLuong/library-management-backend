@@ -1,5 +1,6 @@
 package com.library.library_management_system.dto.response;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 import com.library.library_management_system.enums.BorrowStatus;
@@ -38,6 +39,8 @@ public class BorrowResponse {
     LocalDate returnDate;
 
     BorrowStatus status;
+
+    BigDecimal borrowPrice;
 
     String notes;
 
