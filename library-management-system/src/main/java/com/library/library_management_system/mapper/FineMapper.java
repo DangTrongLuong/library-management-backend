@@ -2,62 +2,58 @@ package com.library.library_management_system.mapper;
 
 import com.library.library_management_system.dto.request.FineRequest;
 import com.library.library_management_system.dto.response.FineResponse;
-import com.library.library_management_system.entity.Borrow;
 import com.library.library_management_system.entity.Fine;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.MappingTarget;
-import org.mapstruct.Named;
+import org.springframework.stereotype.Component;
 
-/**
- * MapStruct Mapper cho Fine Entity
- * Tự động generate implementation code tại compile time
- */
-@Mapper(componentModel = "spring")
-public interface FineMapper {
+@Component
+public class FineMapper {
 
-    /**
-     * Convert Entity sang Response DTO
-     */
-    @Mapping(source = "borrow.borrowId", target = "borrowId")
-    @Mapping(source = "borrow.reader.name", target = "readerName")
-    @Mapping(source = "borrow.book.bookTitle", target = "bookTitle")
-    @Mapping(source = "reason", target = "reasonDescription", qualifiedByName = "reasonToDescription")
-    @Mapping(source = "paymentStatus", target = "paymentStatusDescription", qualifiedByName = "statusToDescription")
-    FineResponse toResponse(Fine fine);
-
-    /**
-     * Convert Request DTO sang Entity (cho create)
-     * Lưu ý: Borrow object cần được set manually trong Service
-     */
-    @Mapping(target = "id", ignore = true)
-    @Mapping(target = "borrow", ignore = true)
-    @Mapping(target = "createdAt", ignore = true)
-    @Mapping(target = "updatedAt", ignore = true)
-    Fine toEntity(FineRequest request);
-
-    /**
-     * Update Entity từ Request DTO (cho update)
-     */
-    @Mapping(target = "id", ignore = true)
-    @Mapping(target = "borrow", ignore = true)
-    @Mapping(target = "createdAt", ignore = true)
-    @Mapping(target = "updatedAt", ignore = true)
-    void updateEntity(FineRequest request, @MappingTarget Fine fine);
-
-    /**
-     * Helper method: Convert FineReason enum sang description
-     */
-    @Named("reasonToDescription")
-    default String reasonToDescription(com.library.library_management_system.enums.FineReason reason) {
-        return reason != null ? reason.getDescription() : null;
+    public Fine toEntity(FineRequest request) {
+        Fine fine = new Fine();
+        fine.setReason(request.getReason());
+        fine.setFineDate(request.getFineDate());
+        fine.setPaymentStatus(request.getPaymentStatus());
+        fine.setPaymentDate(request.getPaymentDate());
+        fine.setNotes(request.getNotes());
+        return fine;
     }
 
-    /**
-     * Helper method: Convert PaymentStatus enum sang description
-     */
-    @Named("statusToDescription")
-    default String statusToDescription(com.library.library_management_system.enums.PaymentStatus status) {
-        return status != null ? status.getDescription() : null;
+    public FineResponse toResponse(Fine fine) {
+        return FineResponse.builder()
+                .id(fine.getId())
+                .borrowId(fine.getBorrow().getBorrowId())
+                .readerId(fine.getBorrow().getReader().getReaderId())
+                .readerName(fine.getBorrow().getReader().getName())
+                .bookId(fine.getBorrow().getBook().getBookId())
+                .bookTitle(fine.getBorrow().getBook().getBookTitle())
+                .reason(fine.getReason())
+                .reasonDescription(fine.getReason().getDescription())
+                .amount(fine.getAmount())
+                .fineDate(fine.getFineDate())
+                .paymentStatus(fine.getPaymentStatus())
+                .paymentStatusDescription(fine.getPaymentStatus().getDescription())
+                .paymentDate(fine.getPaymentDate())
+                .notes(fine.getNotes())
+                .createdAt(fine.getCreatedAt())
+                .updatedAt(fine.getUpdatedAt())
+                .build();
+    }
+
+    public void updateEntityFromRequest(FineRequest request, Fine fine) {
+        if (request.getReason() != null) {
+            fine.setReason(request.getReason());
+        }
+        if (request.getFineDate() != null) {
+            fine.setFineDate(request.getFineDate());
+        }
+        if (request.getPaymentStatus() != null) {
+            fine.setPaymentStatus(request.getPaymentStatus());
+        }
+        if (request.getPaymentDate() != null) {
+            fine.setPaymentDate(request.getPaymentDate());
+        }
+        if (request.getNotes() != null) {
+            fine.setNotes(request.getNotes());
+        }
     }
 }

@@ -12,10 +12,6 @@ import lombok.experimental.FieldDefaults;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-/**
- * DTO Response cho Fine
- * Dùng để trả về thông tin phạt cho client
- */
 @Data
 @Builder
 @NoArgsConstructor
@@ -25,12 +21,12 @@ public class FineResponse {
 
     Long id;
 
-    // Thông tin Borrow
     String borrowId;
+    String readerId;
     String readerName;
+    String bookId;
     String bookTitle;
 
-    // Thông tin Fine
     FineReason reason;
     String reasonDescription;
     BigDecimal amount;
@@ -40,7 +36,6 @@ public class FineResponse {
     LocalDateTime paymentDate;
     String notes;
 
-    // Audit fields
     LocalDateTime createdAt;
     LocalDateTime updatedAt;
 }

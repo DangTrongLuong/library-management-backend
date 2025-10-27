@@ -6,23 +6,24 @@ import com.library.library_management_system.entity.Borrow;
 import com.library.library_management_system.entity.Fine;
 import com.library.library_management_system.enums.FineReason;
 import com.library.library_management_system.enums.PaymentStatus;
+import com.library.library_management_system.exception.NotFoundException;
 import com.library.library_management_system.mapper.FineMapper;
 import com.library.library_management_system.repository.BorrowRepository;
 import com.library.library_management_system.repository.FineRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.stream.Collectors;
 
-/**
- * Service xử lý logic nghiệp vụ cho Fine
- * Chứa các business logic và orchestration
- */
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -32,199 +33,125 @@ public class FineService {
     private final BorrowRepository borrowRepository;
     private final FineMapper fineMapper;
 
-    /**
-     * Lấy danh sách tất cả phạt
-     */
     @Transactional(readOnly = true)
-    public List<FineResponse> getAllFines() {
-        log.info("Fetching all fines");
-        List<Fine> fines = fineRepository.findAll();
-        return fines.stream()
-                .map(fineMapper::toResponse)
-                .collect(Collectors.toList());
+    public Page<FineResponse> getAllFines(Pageable pageable) {
+        log.info("Fetching all fines with pagination");
+        Page<Fine> fines = fineRepository.findAll(pageable);
+        return fines.map(fineMapper::toResponse);
     }
 
-    /**
-     * Lấy thông tin phạt theo ID
-     */
     @Transactional(readOnly = true)
     public FineResponse getFineById(Long id) {
         log.info("Fetching fine with id: {}", id);
         Fine fine = fineRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Fine not found with id: " + id));
+                .orElseThrow(() -> new NotFoundException("Fine not found with id: " + id));
         return fineMapper.toResponse(fine);
     }
 
-    /**
-     * Tạo phạt mới
-     */
     @Transactional
     public FineResponse createFine(FineRequest request) {
         log.info("Creating new fine for borrow id: {}", request.getBorrowId());
 
-        // Validate và lấy Borrow entity
         Borrow borrow = borrowRepository.findById(request.getBorrowId())
-                .orElseThrow(() -> new RuntimeException("Borrow not found with id: " + request.getBorrowId()));
+                .orElseThrow(() -> new NotFoundException("Borrow not found with id: " + request.getBorrowId()));
 
-        // Map request to entity
         Fine fine = fineMapper.toEntity(request);
         fine.setBorrow(borrow);
 
-        // Save
+        BigDecimal amount = calculateAmount(borrow, request.getReason());
+        fine.setAmount(amount);
+
+        if (fine.getFineDate() == null) {
+            fine.setFineDate(LocalDateTime.now());
+        }
+
         Fine savedFine = fineRepository.save(fine);
         log.info("Fine created successfully with id: {}", savedFine.getId());
-
         return fineMapper.toResponse(savedFine);
     }
 
-    /**
-     * Cập nhật thông tin phạt
-     */
     @Transactional
     public FineResponse updateFine(Long id, FineRequest request) {
         log.info("Updating fine with id: {}", id);
 
         Fine fine = fineRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Fine not found with id: " + id));
+                .orElseThrow(() -> new NotFoundException("Fine not found with id: " + id));
 
-        // Update fields từ request
-        fineMapper.updateEntity(request, fine);
+        fineMapper.updateEntityFromRequest(request, fine);
 
-        // Nếu borrowId thay đổi, cần update borrow relationship
-        if (!fine.getBorrow().getBorrowId().equals(request.getBorrowId())) {
-            Borrow newBorrow = borrowRepository.findById(request.getBorrowId())
-                    .orElseThrow(() -> new RuntimeException("Borrow not found with id: " + request.getBorrowId()));
-            fine.setBorrow(newBorrow);
+        if (request.getReason() != null) {
+            BigDecimal newAmount = calculateAmount(fine.getBorrow(), request.getReason());
+            fine.setAmount(newAmount);
         }
 
         Fine updatedFine = fineRepository.save(fine);
         log.info("Fine updated successfully with id: {}", id);
-
         return fineMapper.toResponse(updatedFine);
     }
 
-    /**
-     * Xóa phạt
-     */
     @Transactional
     public void deleteFine(Long id) {
         log.info("Deleting fine with id: {}", id);
-
-        if (!fineRepository.existsById(id)) {
-            throw new RuntimeException("Fine not found with id: " + id);
-        }
-
-        fineRepository.deleteById(id);
+        Fine fine = fineRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Fine not found with id: " + id));
+        fineRepository.delete(fine);
         log.info("Fine deleted successfully with id: {}", id);
     }
 
-    /**
-     * Lấy danh sách phạt theo Borrow ID
-     */
     @Transactional(readOnly = true)
-    public List<FineResponse> getFinesByBorrowId(String borrowId) {
-        log.info("Fetching fines for borrow id: {}", borrowId);
-        List<Fine> fines = fineRepository.findByBorrowId(borrowId);
+    public List<FineResponse> searchFines(String borrowId, FineReason reason) {
+        log.info("Searching fines with borrowId: {}, reason: {}", borrowId, reason);
+        List<Fine> fines = fineRepository.searchByBorrowIdAndReason(borrowId, reason);
         return fines.stream()
                 .map(fineMapper::toResponse)
                 .collect(Collectors.toList());
     }
 
-    /**
-     * Lấy danh sách phạt theo trạng thái thanh toán
-     */
-    @Transactional(readOnly = true)
-    public List<FineResponse> getFinesByPaymentStatus(PaymentStatus paymentStatus) {
-        log.info("Fetching fines with payment status: {}", paymentStatus);
-        List<Fine> fines = fineRepository.findByPaymentStatus(paymentStatus);
-        return fines.stream()
-                .map(fineMapper::toResponse)
-                .collect(Collectors.toList());
-    }
-
-    /**
-     * Lấy danh sách phạt theo lý do
-     */
-    @Transactional(readOnly = true)
-    public List<FineResponse> getFinesByReason(FineReason reason) {
-        log.info("Fetching fines with reason: {}", reason);
-        List<Fine> fines = fineRepository.findByReason(reason);
-        return fines.stream()
-                .map(fineMapper::toResponse)
-                .collect(Collectors.toList());
-    }
-
-    /**
-     * Lấy danh sách phạt theo khoảng thời gian
-     */
-    @Transactional(readOnly = true)
-    public List<FineResponse> getFinesByDateRange(LocalDateTime startDate, LocalDateTime endDate) {
-        log.info("Fetching fines between {} and {}", startDate, endDate);
-        List<Fine> fines = fineRepository.findByFineDateBetween(startDate, endDate);
-        return fines.stream()
-                .map(fineMapper::toResponse)
-                .collect(Collectors.toList());
-    }
-
-    /**
-     * Lấy danh sách phạt theo Reader ID
-     */
-    @Transactional(readOnly = true)
-    public List<FineResponse> getFinesByReaderId(String readerId) {
-        log.info("Fetching fines for reader id: {}", readerId);
-        List<Fine> fines = fineRepository.findByReaderId(readerId);
-        return fines.stream()
-                .map(fineMapper::toResponse)
-                .collect(Collectors.toList());
-    }
-
-    /**
-     * Cập nhật trạng thái thanh toán
-     */
     @Transactional
     public FineResponse updatePaymentStatus(Long id, PaymentStatus paymentStatus) {
         log.info("Updating payment status for fine id: {} to {}", id, paymentStatus);
 
         Fine fine = fineRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Fine not found with id: " + id));
+                .orElseThrow(() -> new NotFoundException("Fine not found with id: " + id));
 
         fine.setPaymentStatus(paymentStatus);
 
-        // Nếu chuyển sang PAID, set payment date
         if (paymentStatus == PaymentStatus.PAID && fine.getPaymentDate() == null) {
             fine.setPaymentDate(LocalDateTime.now());
         }
 
         Fine updatedFine = fineRepository.save(fine);
         log.info("Payment status updated successfully for fine id: {}", id);
-
         return fineMapper.toResponse(updatedFine);
     }
 
-    /**
-     * Tính tổng số tiền phạt chưa thanh toán theo Borrow ID
-     */
-    @Transactional(readOnly = true)
-    public BigDecimal getTotalUnpaidAmount(String borrowId) {
-        log.info("Calculating total unpaid amount for borrow id: {}", borrowId);
-        return fineRepository.getTotalUnpaidAmountByBorrowId(borrowId);
+    private BigDecimal calculateAmount(Borrow borrow, FineReason reason) {
+        BigDecimal bookPrice = borrow.getBook().getPrice();
+        BigDecimal borrowPrice = borrow.getBorrowPrice();
+        LocalDate now = LocalDate.now();
+
+        switch (reason) {
+            case LOST_BOOK:
+                return bookPrice.add(borrowPrice);
+            case DAMAGED_BOOK:
+                return bookPrice.divide(BigDecimal.valueOf(2), 2, BigDecimal.ROUND_HALF_UP).add(borrowPrice);
+            case OVERDUE:
+                long daysLate = ChronoUnit.DAYS.between(borrow.getDueDate(), now);
+                if (daysLate < 0) daysLate = 0;
+                return borrowPrice.multiply(BigDecimal.valueOf(daysLate));
+            default:
+                throw new IllegalArgumentException("Invalid fine reason: " + reason);
+        }
     }
 
-    /**
-     * Kiểm tra xem Borrow ID có phạt chưa thanh toán không
-     */
-    @Transactional(readOnly = true)
-    public boolean hasUnpaidFines(String borrowId) {
-        log.info("Checking unpaid fines for borrow id: {}", borrowId);
-        return fineRepository.existsByBorrowIdAndUnpaidStatus(borrowId);
-    }
+    // Thêm vào FineService.java
+@Transactional(readOnly = true)
+public BigDecimal calculateFineAmount(String borrowId, FineReason reason) {
+    log.info("Calculating fine amount for borrow id: {} and reason: {}", borrowId, reason);
 
-    /**
-     * Tính tổng doanh thu từ phạt đã thanh toán trong khoảng thời gian
-     */
-    @Transactional(readOnly = true)
-    public BigDecimal getTotalPaidAmountBetweenDates(LocalDateTime startDate, LocalDateTime endDate) {
-        log.info("Calculating total paid amount between {} and {}", startDate, endDate);
-        return fineRepository.getTotalPaidAmountBetweenDates(startDate, endDate);
-    }
+    Borrow borrow = borrowRepository.findById(borrowId)
+            .orElseThrow(() -> new NotFoundException("Borrow not found with id: " + borrowId));
+
+    return calculateAmount(borrow, reason);
+}
 }
