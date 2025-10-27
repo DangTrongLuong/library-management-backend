@@ -28,6 +28,10 @@ public class FineController {
 
     private final FineService fineService;
 
+    public FineController(FineService fineService) {
+        this.fineService = fineService;
+    }
+
     // Lấy tất cả phạt
     @GetMapping
     public ResponseEntity<List<FineResponse>> getAllFines() {
