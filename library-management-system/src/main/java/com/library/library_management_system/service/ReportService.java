@@ -88,4 +88,12 @@ public class ReportService {
         Report updatedReport = reportRepository.save(existingReport);
         return reportMapper.toResponse(updatedReport);
     }
+
+    @Transactional
+    public void deleteReport(Long id) {
+        Report report = reportRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Report not found with id: " + id));
+        reportRepository.delete(report);
+    }
+
 }

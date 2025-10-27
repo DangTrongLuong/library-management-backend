@@ -55,4 +55,11 @@ public class ReportController {
         ReportResponse report = reportService.updateReport(id, request);
         return ResponseEntity.ok(report);
     }
+
+    // Xóa báo cáo
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteReport(@PathVariable Long id) {
+        reportService.deleteReport(id);
+        return ResponseEntity.noContent().build();
+    }
 }
