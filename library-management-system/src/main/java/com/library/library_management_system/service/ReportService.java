@@ -73,5 +73,20 @@ public class ReportService {
         return reportMapper.toResponse(savedReport);
     }
 
+    @Transactional
+    public ReportResponse updateReport(Long id, ReportRequest request) {
+        Report existingReport = reportRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Report not found with id: " + id));
+
+        existingReport.setReportType(request.getReportType());
+        existingReport.setStartDate(request.getStartDate());
+        existingReport.setEndDate(request.getEndDate());
+        existingReport.setContent(request.getContent());
+
+        Report updatedReport = reportRepository.save(existingReport);
+        return reportMapper.toResponse(updatedReport);
+    }
+
+
 
 }
