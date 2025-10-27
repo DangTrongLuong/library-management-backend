@@ -6,6 +6,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
+import java.math.BigDecimal;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -29,4 +31,6 @@ public class BookResponse {
     Integer quantity;
 
     String imageUrl;
+
+    BigDecimal price;
 }
