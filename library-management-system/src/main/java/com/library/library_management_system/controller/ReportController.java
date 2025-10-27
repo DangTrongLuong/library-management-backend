@@ -18,21 +18,21 @@ public class ReportController {
         this.reportService = reportService;
     }
 
-    // Lấy tất cả báo cáo
+    // Lấy tất cả
     @GetMapping
     public ResponseEntity<List<ReportResponse>> getAllReports() {
         List<ReportResponse> reports = reportService.getAllReports();
         return ResponseEntity.ok(reports);
     }
 
-    // Lấy báo cáo theo ID
+    // Lấy báo cáo
     @GetMapping("/{id}")
     public ResponseEntity<ReportResponse> getReportById(@PathVariable Long id) {
         ReportResponse report = reportService.getReportById(id);
         return ResponseEntity.ok(report);
     }
 
-    // Tìm kiếm báo cáo theo loại và người tạo
+    // Tìm kiếm báo cáo
     @GetMapping("/search")
     public ResponseEntity<List<ReportResponse>> searchReports(
             @RequestParam(required = false) String type,
@@ -41,7 +41,6 @@ public class ReportController {
         return ResponseEntity.ok(reports);
     }
 
-    // Tạo mới báo cáo
     @PostMapping
     public ResponseEntity<ReportResponse> createReport(@RequestBody ReportRequest request) {
         ReportResponse report = reportService.createReport(request);
