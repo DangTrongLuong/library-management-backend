@@ -60,6 +60,7 @@ public class ReportService {
     }
 
 
+    //tao bao cao
     @Transactional
     public ReportResponse createReport(ReportRequest request) {
         if (request.getReportId() != null && reportRepository.existsById(request.getReportId())) {

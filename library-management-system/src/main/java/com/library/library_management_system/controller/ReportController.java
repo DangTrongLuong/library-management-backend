@@ -41,6 +41,7 @@ public class ReportController {
         return ResponseEntity.ok(reports);
     }
 
+    //them bao cao
     @PostMapping
     public ResponseEntity<ReportResponse> createReport(@RequestBody ReportRequest request) {
         ReportResponse report = reportService.createReport(request);
