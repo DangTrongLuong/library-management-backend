@@ -14,10 +14,6 @@ import lombok.experimental.FieldDefaults;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-/**
- * Entity đại diện cho bảng Fine trong database
- * Quản lý các khoản phạt liên quan đến phiếu mượn
- */
 @Entity
 @Table(
         name = "fines",
@@ -51,7 +47,7 @@ public class Fine {
 
     @Column(name = "amount", nullable = false, precision = 10, scale = 2)
     @NotNull(message = "Amount is required")
-    @DecimalMin(value = "0.0", inclusive = false, message = "Amount must be greater than 0")
+    @DecimalMin(value = "0.0", message = "Amount must be greater than or equal to 0")
     BigDecimal amount;
 
     @Column(name = "fine_date", nullable = false)
@@ -90,8 +86,6 @@ public class Fine {
     @PreUpdate
     protected void onUpdate() {
         updatedAt = LocalDateTime.now();
-
-        // Tự động set payment date khi status chuyển sang PAID
         if (paymentStatus == PaymentStatus.PAID && paymentDate == null) {
             paymentDate = LocalDateTime.now();
         }
