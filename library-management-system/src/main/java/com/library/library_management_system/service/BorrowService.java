@@ -5,22 +5,22 @@ import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
 
-import com.library.library_management_system.entity.Reader;
-import com.library.library_management_system.exception.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.library.library_management_system.dto.request.BorrowRequest;
 import com.library.library_management_system.dto.response.BorrowResponse;
 import com.library.library_management_system.entity.Books;
 import com.library.library_management_system.entity.Borrow;
+import com.library.library_management_system.entity.Reader;
 import com.library.library_management_system.enums.BorrowStatus;
 import com.library.library_management_system.exception.InsufficientStockException;
+import com.library.library_management_system.exception.NotFoundException;
 import com.library.library_management_system.mapper.BorrowMapper;
 import com.library.library_management_system.repository.BookRepository;
 import com.library.library_management_system.repository.BorrowRepository;
 import com.library.library_management_system.repository.ReaderRepository;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class BorrowService {
@@ -80,7 +80,7 @@ public class BorrowService {
         borrow.setBook(book);
         borrow.setBorrowId(borrowId); // Set generated ID
         borrow.setStatus(BorrowStatus.BORROWED); // Default status
-
+        borrow.setBorrowPrice(borrow.getBorrowPrice());
 
         Borrow savedBorrow = borrowRepository.save(borrow);
         return borrowMapper.toResponse(savedBorrow);

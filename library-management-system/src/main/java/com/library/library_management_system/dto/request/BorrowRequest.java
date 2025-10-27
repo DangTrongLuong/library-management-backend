@@ -1,5 +1,6 @@
 package com.library.library_management_system.dto.request;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 import com.library.library_management_system.enums.BorrowStatus;
@@ -34,6 +35,10 @@ public class BorrowRequest {
     LocalDate returnDate;
 
     BorrowStatus status;
+
+    
+    @NotNull(message = "Borrow price is required")
+    BigDecimal borrowPrice;
 
     String notes;
 }
