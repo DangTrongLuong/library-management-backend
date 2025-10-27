@@ -59,13 +59,12 @@ public class ReportService {
                 .collect(Collectors.toList());
     }
 
-    //Them bc
+
     @Transactional
     public ReportResponse createReport(ReportRequest request) {
         if (request.getReportId() != null && reportRepository.existsById(request.getReportId())) {
             throw new RuntimeException("Report ID already exists: " + request.getReportId());
         }
-
         User creator = userRepository.findById(request.getCreatorId())
                 .orElseThrow(() -> new NotFoundException("Creator not found with id: " + request.getCreatorId()));
 
