@@ -1,19 +1,37 @@
 package com.library.library_management_system.dto.response;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
+import com.library.library_management_system.enums.ReportType;
+
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.AllArgsConstructor;
-
-import java.time.LocalDate;
+import lombok.experimental.FieldDefaults;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class ReportResponse {
-    private Long reportId;
-    private String reportType;
-    private LocalDate startDate;
-    private LocalDate endDate;
-    private String content;
-    private Long creatorId; // để hiển thị thông tin người tạo
+
+    String id;
+
+    ReportType type;
+
+    String typeDescription;
+
+    LocalDate fromDate;
+
+    LocalDate toDate;
+
+    String content;
+
+    String createdBy;
+
+    LocalDateTime createdAt;
+
+    LocalDateTime updatedAt;
 }

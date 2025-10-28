@@ -1,18 +1,26 @@
 package com.library.library_management_system.dto.request;
-
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.AllArgsConstructor;
 import java.time.LocalDate;
 
+import com.library.library_management_system.enums.ReportType;
+
+import jakarta.validation.constraints.NotNull;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.experimental.FieldDefaults;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class ReportRequest {
-    private Long reportId;      // ID của báo cáo
-    private String reportType;  // Loại báo cáo
-    private LocalDate startDate;
-    private LocalDate endDate;
-    private String content;
-    private Long creatorId;     // ID của người tạo
+@NotNull(message = "Report type is required")
+ReportType type;
+@NotNull(message = "From date is required")
+LocalDate fromDate;
+@NotNull(message = "To date is required")
+LocalDate toDate;
+String content;
+@NotNull(message = "Created by is required")
+String createdBy;
 }
