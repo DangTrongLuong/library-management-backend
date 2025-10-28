@@ -1,55 +1,53 @@
 package com.library.library_management_system.mapper;
 
+import org.springframework.stereotype.Component;
+
 import com.library.library_management_system.dto.request.ReportRequest;
 import com.library.library_management_system.dto.response.ReportResponse;
 import com.library.library_management_system.entity.Report;
-import com.library.library_management_system.entity.User;
-import org.springframework.stereotype.Component;
-
-import java.time.LocalDateTime;
 
 @Component
 public class ReportMapper {
 
-    // Convert Entity -> Response DTO
-    public ReportResponse toResponse(Report report) {
-        if (report == null) return null;
-
-        ReportResponse resp = new ReportResponse();
-        resp.setReportId(report.getReportId()); // Long
-        resp.setReportType(report.getReportType());
-        resp.setStartDate(report.getStartDate());
-        resp.setEndDate(report.getEndDate());
-        resp.setContent(report.getContent());
-
-        // Đảm bảo creatorId là Long
-        if (report.getCreator() != null && report.getCreator().getId() != null) {
-            resp.setCreatorId(report.getCreator().getId());
-        } else {
-            resp.setCreatorId(null);
-        }
-
-        return resp;
-    }
-
-    // Convert Request DTO -> Entity
-    public Report toEntity(ReportRequest request, User creator) {
-        if (request == null) return null;
-
+    public Report toEntity(ReportRequest request) {
         Report report = new Report();
-        report.setReportId(request.getReportId()); // Long
-        report.setReportType(request.getReportType());
-        report.setStartDate(request.getStartDate());
-        report.setEndDate(request.getEndDate());
+        report.setType(request.getType());
+        report.setFromDate(request.getFromDate());
+        report.setToDate(request.getToDate());
         report.setContent(request.getContent());
-        report.setCreator(creator); // User entity
-        report.setCreatedAt(LocalDateTime.now());
-
+        report.setCreatedBy(request.getCreatedBy());
         return report;
     }
 
-    // Extract creatorId safely
-    public Long extractCreatorId(Report report) {
-        return (report != null && report.getCreator() != null) ? report.getCreator().getId() : null;
+    public ReportResponse toResponse(Report report) {
+        ReportResponse response = new ReportResponse();
+        response.setId(report.getId());
+        response.setType(report.getType());
+        response.setTypeDescription(report.getType().getDescription());
+        response.setFromDate(report.getFromDate());
+        response.setToDate(report.getToDate());
+        response.setContent(report.getContent());
+        response.setCreatedBy(report.getCreatedBy());
+        response.setCreatedAt(report.getCreatedAt());
+        response.setUpdatedAt(report.getUpdatedAt());
+        return response;
+    }
+
+    public void updateEntityFromRequest(ReportRequest request, Report report) {
+        if (request.getType() != null) {
+            report.setType(request.getType());
+        }
+        if (request.getFromDate() != null) {
+            report.setFromDate(request.getFromDate());
+        }
+        if (request.getToDate() != null) {
+            report.setToDate(request.getToDate());
+        }
+        if (request.getContent() != null) {
+            report.setContent(request.getContent());
+        }
+        if (request.getCreatedBy() != null) {
+            report.setCreatedBy(request.getCreatedBy());
+        }
     }
 }
